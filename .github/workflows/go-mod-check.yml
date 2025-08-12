@@ -1,0 +1,251 @@
+name: Check Rancher Go.mod Dependencies
+
+on:
+  workflow_dispatch:  # Manual trigger with a button click
+
+permissions:
+  contents: write  # Allow writing to the repository
+
+jobs:
+  check-dependencies:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+          
+      - name: Setup tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq unzip curl
+          
+      - name: Debug - Show README content
+        run: |
+          echo "=== First 20 lines of README.md ==="
+          head -n 20 README.md || echo "README.md not found"
+          echo ""
+          echo "=== Already processed versions (with PROCESSED marker) ==="
+          grep -E '^[-*]\s+v[0-9]+\.[0-9]+\.[0-9]+.*PROCESSED' README.md || echo "No versions marked as complete"
+          echo ""
+          echo "=== Versions to process (without PROCESSED marker) ==="
+          grep -E '^[-*]\s+v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9\.]+)?$' README.md | grep -v PROCESSED || echo "No unprocessed versions found"
+          
+      - name: Process README versions
+        run: |
+          # Extract versions from README.md (handles both * and - bullet points)
+          echo "Extracting versions from README..."
+          
+          # Count already processed versions
+          CHECKED_COUNT=$(grep -E '^[-*]\s+v[0-9]+\.[0-9]+\.[0-9]+.*PROCESSED' README.md | wc -l || echo "0")
+          echo "Already processed versions: $CHECKED_COUNT"
+          
+          # Get versions WITHOUT PROCESSED marker (skip already processed ones)
+          VERSIONS=$(grep -E '^[-*]\s+v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9\.]+)?$' README.md | grep -v PROCESSED | sed 's/^[-*]\s*//')
+          VERSION_COUNT=$(echo "$VERSIONS" | grep -c '^v' || echo "0")
+          echo "Found $VERSION_COUNT new version(s) to process"
+          
+          if [ "$VERSION_COUNT" -eq "0" ]; then
+            echo "All versions are already processed! Nothing to do."
+            exit 0
+          fi
+          
+          echo "Versions to process:"
+          echo "$VERSIONS"
+          echo ""
+          
+          echo "$VERSIONS" | while read -r VERSION; do
+            if [ -z "$VERSION" ]; then
+              continue
+            fi
+            
+            echo "Processing version: $VERSION"
+            
+            # Check if report already exists (in case of re-run)
+            if [ -f "$VERSION/report.txt" ]; then
+              echo "Report already exists for $VERSION, updating README marker only"
+              VERSION_ESCAPED=$(echo "$VERSION" | sed 's/[[\.*^$()+?{|]/\\&/g')
+              sed -i "s/^\([-*]\s*\)${VERSION_ESCAPED}$/\1${VERSION} - PROCESSED/" README.md
+              echo "Added PROCESSED marker to $VERSION in README"
+              continue
+            fi
+            
+            # Create version directory
+            mkdir -p "$VERSION"
+            
+            # Download Rancher source
+            RANCHER_URL="https://github.com/rancher/rancher/archive/refs/tags/${VERSION}.zip"
+            echo "Downloading Rancher source from: $RANCHER_URL"
+            
+            if curl -L -f -o rancher.zip "$RANCHER_URL"; then
+              # Extract rancher source
+              unzip -q rancher.zip
+              
+              # Get the extracted folder name (it's usually rancher-<version without v>)
+              RANCHER_DIR=$(ls -d rancher-* | head -n1)
+              
+              # Copy go.mod file
+              if [ -f "$RANCHER_DIR/go.mod" ]; then
+                cp "$RANCHER_DIR/go.mod" rancher_go.mod
+                echo "Extracted rancher_go.mod"
+              else
+                echo "Error: go.mod not found in Rancher source"
+                rm -rf "$RANCHER_DIR" rancher.zip
+                continue
+              fi
+              
+              # Extract webhook version from build.yaml
+              if [ -f "$RANCHER_DIR/build.yaml" ]; then
+                WEBHOOK_VERSION=$(grep -E 'webhookVersion:' "$RANCHER_DIR/build.yaml" | sed 's/.*webhookVersion:\s*//' | tr -d ' ')
+                echo "Found webhook version: $WEBHOOK_VERSION"
+                
+                # Extract just the version tag from webhook version (e.g., v0.8.0-rc.13 from 107.0.0+up0.8.0-rc.13)
+                # This pattern handles the format: xxx.x.x+upX.Y.Z-suffix
+                WEBHOOK_TAG=$(echo "$WEBHOOK_VERSION" | sed -E 's/^[0-9]+\.[0-9]+\.[0-9]+\+up/v/')
+                echo "Webhook tag: $WEBHOOK_TAG"
+              else
+                echo "Error: build.yaml not found"
+                rm -rf "$RANCHER_DIR" rancher.zip rancher_go.mod
+                continue
+              fi
+              
+              # Clean up Rancher files
+              rm -rf "$RANCHER_DIR" rancher.zip
+              
+              # Download Webhook source
+              WEBHOOK_URL="https://github.com/rancher/webhook/archive/refs/tags/${WEBHOOK_TAG}.zip"
+              echo "Downloading Webhook source from: $WEBHOOK_URL"
+              
+              if curl -L -f -o webhook.zip "$WEBHOOK_URL"; then
+                # Extract webhook source
+                unzip -q webhook.zip
+                
+                # Get the extracted folder name
+                WEBHOOK_DIR=$(ls -d webhook-* | head -n1)
+                
+                # Copy go.mod file
+                if [ -f "$WEBHOOK_DIR/go.mod" ]; then
+                  cp "$WEBHOOK_DIR/go.mod" webhook_go.mod
+                  echo "Extracted webhook_go.mod"
+                else
+                  echo "Error: go.mod not found in Webhook source"
+                  rm -rf "$WEBHOOK_DIR" webhook.zip rancher_go.mod
+                  continue
+                fi
+                
+                # Clean up webhook files
+                rm -rf "$WEBHOOK_DIR" webhook.zip
+                
+                # Run comparison script and save to version folder
+                echo "Running go.mod comparison..."
+                curl -sL https://raw.githubusercontent.com/brudnak/rancher-test-scripts/refs/heads/main/webhook/gomod/script.sh | bash -s -- rancher_go.mod webhook_go.mod > "$VERSION/report.txt"
+                
+                # Add metadata to report
+                {
+                  echo "# Go.mod Dependency Comparison Report"
+                  echo "**Rancher Version:** $VERSION"
+                  echo "**Webhook Version:** $WEBHOOK_TAG (from $WEBHOOK_VERSION)"
+                  echo "**Generated:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+                  echo ""
+                  echo "---"
+                  echo ""
+                  cat "$VERSION/report.txt"
+                } > "$VERSION/report_temp.md"
+                mv "$VERSION/report_temp.md" "$VERSION/report.txt"
+                
+                echo "Report saved to $VERSION/report.txt"
+                
+                # Mark this version as processed in README
+                echo "Marking $VERSION as completed in README..."
+                # Escape special characters in version string for sed
+                VERSION_ESCAPED=$(echo "$VERSION" | sed 's/[[\.*^$()+?{|]/\\&/g')
+                # Add PROCESSED marker to the version line
+                sed -i "s/^\([-*]\s*\)${VERSION_ESCAPED}$/\1${VERSION} - PROCESSED/" README.md
+                echo "Added PROCESSED marker to $VERSION in README"
+                
+                # Clean up go.mod files
+                rm -f rancher_go.mod webhook_go.mod
+                
+                # Clean up any temp files created by the comparison script
+                rm -f rancher_deps_comparison_*.txt
+                
+              else
+                echo "Error: Failed to download Webhook source"
+                rm -f rancher_go.mod
+                continue
+              fi
+              
+            else
+              echo "Error: Failed to download Rancher source for version $VERSION"
+              continue
+            fi
+            
+            echo "Completed processing for version $VERSION"
+            echo "---"
+          done
+          
+          # Clean up any stray comparison files
+          rm -f rancher_deps_comparison_*.txt
+          
+      - name: Commit and push results
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Check if there are any changes (version folders or README updates)
+          if [ -n "$(git status --porcelain)" ]; then
+            # Add version folders if they exist
+            if ls -d v*/ 2>/dev/null | head -n1 > /dev/null; then
+              git add v*/
+            fi
+            
+            # Add README if it was modified
+            if git diff --name-only | grep -q "README.md"; then
+              git add README.md
+            fi
+            
+            # Check if there are changes staged
+            if git diff --cached --quiet; then
+              echo "No changes to commit"
+            else
+              git commit -m "Add go.mod comparison reports and update README with completion status"
+              git push
+              echo "Results committed and pushed successfully"
+            fi
+          else
+            echo "No changes to commit"
+          fi
+          
+      - name: Summary
+        run: |
+          echo "## Processing Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Show skipped versions
+          SKIPPED=$(grep -E '^[-*]\s+v[0-9]+\.[0-9]+\.[0-9]+.*PROCESSED' README.md | sed 's/^[-*]\s*//' || true)
+          if [ -n "$SKIPPED" ]; then
+            echo "### Skipped (already processed):" >> $GITHUB_STEP_SUMMARY
+            echo "$SKIPPED" | while read -r VERSION; do
+              echo "- $VERSION" >> $GITHUB_STEP_SUMMARY
+            done
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Show processed versions
+          echo "### Processing Results:" >> $GITHUB_STEP_SUMMARY
+          
+          # List all version folders created
+          for dir in v*/; do
+            if [ -d "$dir" ]; then
+              VERSION=$(basename "$dir")
+              if [ -f "$dir/report.txt" ]; then
+                echo "- **$VERSION** - Report generated successfully" >> $GITHUB_STEP_SUMMARY
+              else
+                echo "- **$VERSION** - Report generation failed" >> $GITHUB_STEP_SUMMARY
+              fi
+            fi
+          done
+          
+          # If no versions were processed
+          if ! ls -d v*/ 2>/dev/null | head -n1 > /dev/null; then
+            echo "No new versions to process" >> $GITHUB_STEP_SUMMARY
+          fi
