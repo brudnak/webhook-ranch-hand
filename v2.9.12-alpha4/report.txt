@@ -1,0 +1,169 @@
+# Go.mod Dependency Comparison Report
+**Rancher Version:** v2.9.12-alpha4
+**Webhook Version:** v0.5.12-rc.3 (from 104.0.12+up0.5.12-rc.3)
+**Generated:** 2025-09-23 22:22:17 UTC
+
+---
+
+Rancher Dependencies Comparison Report - Generated at Tue Sep 23 22:22:16 UTC 2025
+===========================================================
+Comparing:
+  Rancher: rancher_go.mod
+  Webhook: webhook_go.mod
+===========================================================
+
+Rancher Module Dependencies (github.com/rancher/*)
+==================================================
+
+Require statements:
+module github.com/rancher/rancher
+	github.com/rancher/rancher/pkg/apis v0.0.0-20240719121207-baeda6b89fe3
+	github.com/rancher/shepherd v0.0.0-20241217192057-f59684bee167
+	github.com/rancher/aks-operator v1.9.10
+	github.com/rancher/apiserver v0.3.0
+	github.com/rancher/channelserver v0.7.0
+	github.com/rancher/dynamiclistener v0.6.1
+	github.com/rancher/eks-operator v1.9.10
+	github.com/rancher/fleet/pkg/apis v0.10.13
+	github.com/rancher/gke-operator v1.9.10
+	github.com/rancher/kubernetes-provider-detector v0.1.5
+	github.com/rancher/lasso v0.2.1
+	github.com/rancher/machine v0.15.0-rancher125
+	github.com/rancher/norman v0.3.1
+	github.com/rancher/rancher/pkg/client v0.0.0
+	github.com/rancher/remotedialer v0.4.0
+	github.com/rancher/rke v1.6.12
+	github.com/rancher/steve v0.3.3
+	github.com/rancher/system-upgrade-controller/pkg/apis v0.0.0-20240301001845-4eacc2dabbde
+	github.com/rancher/wrangler v1.1.2
+	github.com/rancher/wrangler/v3 v3.1.0
+	github.com/rancher/cis-operator v1.0.11
+
+Replace statements:
+	github.com/rancher/rancher/pkg/apis => ./pkg/apis
+	github.com/rancher/rancher/pkg/client => ./pkg/client
+	github.com/rancher/wrangler/v3 => github.com/rancher/wrangler/v3 v3.0.1
+
+Webhook Module Dependencies (github.com/rancher/*)
+==================================================
+
+Require statements:
+module github.com/rancher/webhook
+	github.com/rancher/dynamiclistener v0.6.1
+	github.com/rancher/lasso v0.2.1
+	github.com/rancher/rancher/pkg/apis v0.0.0-20250918131214-f19b2d3ce0c2
+	github.com/rancher/rke v1.6.12
+	github.com/rancher/wrangler/v3 v3.1.0
+	github.com/rancher/aks-operator v1.9.10 // indirect
+	github.com/rancher/eks-operator v1.9.10 // indirect
+	github.com/rancher/fleet/pkg/apis v0.10.13 // indirect
+	github.com/rancher/gke-operator v1.9.10 // indirect
+	github.com/rancher/norman v0.3.1 // indirect
+
+Replace statements:
+	github.com/rancher/rke => github.com/rancher/rke v1.6.4
+
+Finding all unique Rancher repositories...
+
+Detailed Version Analysis:
+==========================
+
+Repository: github.com/rancher/aks-operator
+In Rancher:
+    	github.com/rancher/aks-operator v1.9.10
+In Webhook:
+    	github.com/rancher/aks-operator v1.9.10 // indirect
+
+Repository: github.com/rancher/dynamiclistener
+In Rancher:
+    	github.com/rancher/dynamiclistener v0.6.1
+In Webhook:
+    	github.com/rancher/dynamiclistener v0.6.1
+
+Repository: github.com/rancher/eks-operator
+In Rancher:
+    	github.com/rancher/eks-operator v1.9.10
+In Webhook:
+    	github.com/rancher/eks-operator v1.9.10 // indirect
+
+Repository: github.com/rancher/fleet
+In Rancher:
+    	github.com/rancher/fleet/pkg/apis v0.10.13
+In Webhook:
+    	github.com/rancher/fleet/pkg/apis v0.10.13 // indirect
+
+Repository: github.com/rancher/gke-operator
+In Rancher:
+    	github.com/rancher/gke-operator v1.9.10
+In Webhook:
+    	github.com/rancher/gke-operator v1.9.10 // indirect
+
+Repository: github.com/rancher/lasso
+In Rancher:
+    	github.com/rancher/lasso v0.2.1
+In Webhook:
+    	github.com/rancher/lasso v0.2.1
+
+Repository: github.com/rancher/norman
+In Rancher:
+    	github.com/rancher/norman v0.3.1
+In Webhook:
+    	github.com/rancher/norman v0.3.1 // indirect
+
+Repository: github.com/rancher/rancher
+In Rancher:
+    	github.com/rancher/rancher/pkg/apis => ./pkg/apis
+    	github.com/rancher/rancher/pkg/client => ./pkg/client
+    	github.com/rancher/rancher/pkg/apis v0.0.0-20240719121207-baeda6b89fe3
+    	github.com/rancher/rancher/pkg/client v0.0.0
+In Webhook:
+    	github.com/rancher/rancher/pkg/apis v0.0.0-20250918131214-f19b2d3ce0c2
+
+Repository: github.com/rancher/rke
+In Rancher:
+    	github.com/rancher/rke v1.6.12
+In Webhook:
+    	github.com/rancher/rke => github.com/rancher/rke v1.6.4
+    	github.com/rancher/rke v1.6.12
+
+Repository: github.com/rancher/wrangler
+In Rancher:
+    	github.com/rancher/wrangler/v3 => github.com/rancher/wrangler/v3 v3.0.1
+    	github.com/rancher/wrangler v1.1.2
+    	github.com/rancher/wrangler/v3 v3.1.0
+In Webhook:
+    	github.com/rancher/wrangler/v3 v3.1.0
+
+Version Mismatches Found (3 total):
+===========================================
+
+Repository: github.com/rancher/rancher
+In Rancher:
+    	github.com/rancher/rancher/pkg/apis => ./pkg/apis
+    	github.com/rancher/rancher/pkg/client => ./pkg/client
+    	github.com/rancher/rancher/pkg/apis v0.0.0-20240719121207-baeda6b89fe3
+    	github.com/rancher/rancher/pkg/client v0.0.0
+In Webhook:
+    	github.com/rancher/rancher/pkg/apis v0.0.0-20250918131214-f19b2d3ce0c2
+
+Repository: github.com/rancher/rke
+In Rancher:
+    	github.com/rancher/rke v1.6.12
+In Webhook:
+    	github.com/rancher/rke => github.com/rancher/rke v1.6.4
+    	github.com/rancher/rke v1.6.12
+
+Repository: github.com/rancher/wrangler
+In Rancher:
+    	github.com/rancher/wrangler/v3 => github.com/rancher/wrangler/v3 v3.0.1
+    	github.com/rancher/wrangler v1.1.2
+    	github.com/rancher/wrangler/v3 v3.1.0
+In Webhook:
+    	github.com/rancher/wrangler/v3 v3.1.0
+
+Summary:
+========
+Total Rancher dependencies in rancher_go.mod: 29
+Total Rancher dependencies in webhook_go.mod: 12
+Number of version mismatches found: 3
+Report generated: rancher_deps_comparison_20250923_222216.txt
