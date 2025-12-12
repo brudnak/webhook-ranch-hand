@@ -2,9 +2,9 @@
 
 
 # Versions to be Checked
-- v2.11.9-alpha1
-- v2.13.1-alpha2
-- v2.12.5-alpha2
+- v2.11.9-alpha1 - PROCESSED
+- v2.13.1-alpha2 - PROCESSED
+- v2.12.5-alpha2 - PROCESSED
 - v2.11.8-alpha4 - PROCESSED
 - v2.12.4-alpha6 - PROCESSED
 - v2.13.0-alpha7 - PROCESSED
