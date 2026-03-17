@@ -2,9 +2,9 @@
 
 
 # Versions to be Checked
-- v2.14.0-alpha12
-- v2.13.4-alpha4
-- v2.12.8-alpha2
+- v2.14.0-alpha12 - PROCESSED
+- v2.13.4-alpha4 - PROCESSED
+- v2.12.8-alpha2 - PROCESSED
 
 # How to Use
 
