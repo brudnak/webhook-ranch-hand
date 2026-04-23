@@ -477,4 +477,15 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+### Project ###
+# Built binary for scripts/compare-gomod (no extension on linux/macOS,
+# so the generic Go rules above don't catch it)
+/bin/
+/scripts/compare-gomod/compare-gomod
+
+# Scratch/test output
+/tmp/
+*.tmp.md
+rancher_deps_comparison_*.txt
+
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,linux,jetbrains,visualstudiocode,go,node,vim,emacs,notepadpp,sublimetext
