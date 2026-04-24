@@ -54,19 +54,19 @@ func usage() {
 }
 
 type dep struct {
-	path       string
-	required   string
-	indirect   bool
-	replaceVer string
-	replaceLoc bool
+	path        string
+	required    string
+	indirect    bool
+	replaceVer  string // non-empty: replaced to this version
+	replacePath string // non-empty: replaced to this filesystem path
 }
 
 func (d *dep) effective() string {
 	if d == nil {
 		return ""
 	}
-	if d.replaceLoc {
-		return "local"
+	if d.replacePath != "" {
+		return d.replacePath
 	}
 	if d.replaceVer != "" {
 		return d.replaceVer
@@ -104,7 +104,7 @@ func parseGoMod(path string) (map[string]*dep, error) {
 		}
 		d := get(r.Old.Path)
 		if strings.HasPrefix(r.New.Path, ".") || strings.HasPrefix(r.New.Path, "/") {
-			d.replaceLoc = true
+			d.replacePath = r.New.Path
 		} else {
 			d.replaceVer = r.New.Version
 		}
@@ -242,6 +242,8 @@ func cmdCompare(args []string) {
 		webhookPublished: parseMaybeTime(*webhookPublished),
 		rows:             rows,
 		now:              time.Now().UTC(),
+		rancherModPath:   fs.Arg(0),
+		webhookModPath:   fs.Arg(1),
 	})
 	if err := os.WriteFile(outPath, []byte(body), 0o644); err != nil {
 		fmt.Fprintf(os.Stderr, "compare: %v\n", err)
@@ -269,6 +271,8 @@ type reportInput struct {
 	webhookPublished time.Time
 	rows             []row
 	now              time.Time
+	rancherModPath   string
+	webhookModPath   string
 }
 
 func renderReport(in reportInput) string {
@@ -316,14 +320,16 @@ func renderReport(in reportInput) string {
 	fmt.Fprintf(&b, "[← Back to %s](README.md) · [Back to dashboard](../../README.md)\n\n", line)
 	fmt.Fprintf(&b, "# %s\n\n", in.version)
 
-	b.WriteString("| | Tag | Released |\n| --- | --- | --- |\n")
-	fmt.Fprintf(&b, "| Rancher | `%s` | %s |\n", in.version, fmtDateCell(in.rancherPublished))
+	b.WriteString("| Side | Tag | Released | Source |\n| --- | --- | --- | --- |\n")
+	rancherSrc := fmt.Sprintf("[go.mod](https://github.com/rancher/rancher/blob/%s/go.mod) · [build.yaml](https://github.com/rancher/rancher/blob/%s/build.yaml)", in.version, in.version)
+	fmt.Fprintf(&b, "| Rancher | `%s` | %s | %s |\n", in.version, fmtDateCell(in.rancherPublished), rancherSrc)
 	if in.webhook != "" {
 		webhookTagCell := "`" + in.webhook + "`"
 		if in.webhookBuild != "" {
-			webhookTagCell += " &nbsp;·&nbsp; from `" + in.webhookBuild + "`"
+			webhookTagCell += " · from `" + in.webhookBuild + "`"
 		}
-		fmt.Fprintf(&b, "| Webhook | %s | %s |\n", webhookTagCell, fmtDateCell(in.webhookPublished))
+		webhookSrc := fmt.Sprintf("[go.mod](https://github.com/rancher/webhook/blob/%s/go.mod)", in.webhook)
+		fmt.Fprintf(&b, "| Webhook | %s | %s | %s |\n", webhookTagCell, fmtDateCell(in.webhookPublished), webhookSrc)
 	}
 	b.WriteString("\n")
 	fmt.Fprintf(&b, "**Checked:** %s\n\n", in.now.Format("2006-01-02 15:04 UTC"))
@@ -338,7 +344,11 @@ func renderReport(in reportInput) string {
 		for _, r := range mismatches {
 			rv := effectiveOrDash(r.rancher)
 			wv := effectiveOrDash(r.webhook)
-			fmt.Fprintf(&b, "| `%s` | `%s` | `%s` | %s |\n", shortName(r.path), rv, wv, strings.Join(r.notes, "; "))
+			notes := strings.Join(r.notes, "; ")
+			if notes == "" {
+				notes = "—"
+			}
+			fmt.Fprintf(&b, "| `%s` | `%s` | `%s` | %s |\n", shortName(r.path), rv, wv, notes)
 		}
 		b.WriteString("\n")
 	}
@@ -362,7 +372,7 @@ func renderReport(in reportInput) string {
 		for _, r := range ignored {
 			fmt.Fprintf(&b, "| `%s` | `%s` | `%s` |\n", shortName(r.path), effectiveOrDash(r.rancher), effectiveOrDash(r.webhook))
 		}
-		b.WriteString("\n_`pkg/apis` and `pkg/client` always drift: rancher replaces them locally to `./pkg/apis` and `./pkg/client`, while webhook pins by commit hash against rancher main. Mismatch is expected._\n\n")
+		b.WriteString("\n_Rancher replaces these to in-tree paths (shown above), so the \"version\" in its go.mod is a stale pseudo-version. Webhook pins by commit hash against rancher main. The mismatch is structural and expected._\n\n")
 		b.WriteString("</details>\n\n")
 	}
 
@@ -382,9 +392,90 @@ func renderReport(in reportInput) string {
 		b.WriteString("\n</details>\n\n")
 	}
 
+	if in.rancherModPath != "" || in.webhookModPath != "" {
+		b.WriteString("## 📄 Sanitized `go.mod` (rancher/* stanzas only)\n\n")
+		if in.rancherModPath != "" {
+			if stanzas, err := extractRancherStanzas(in.rancherModPath); err == nil && stanzas != "" {
+				b.WriteString("<details><summary>🔍 <b>rancher/rancher</b> — click to expand</summary>\n\n")
+				b.WriteString("```go\n")
+				b.WriteString(stanzas)
+				b.WriteString("```\n\n")
+				b.WriteString("</details>\n\n")
+			}
+		}
+		if in.webhookModPath != "" {
+			if stanzas, err := extractRancherStanzas(in.webhookModPath); err == nil && stanzas != "" {
+				b.WriteString("<details><summary>🔍 <b>rancher/webhook</b> — click to expand</summary>\n\n")
+				b.WriteString("```go\n")
+				b.WriteString(stanzas)
+				b.WriteString("```\n\n")
+				b.WriteString("</details>\n\n")
+			}
+		}
+	}
+
 	b.WriteString("---\n\n")
 	fmt.Fprintf(&b, "[← Back to %s](README.md) · [Back to dashboard](../../README.md)\n", line)
 	return b.String()
+}
+
+// extractRancherStanzas re-parses a go.mod and re-synthesizes just the
+// github.com/rancher/* require and replace blocks.
+func extractRancherStanzas(path string) (string, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+	f, err := modfile.Parse(path, data, nil)
+	if err != nil {
+		return "", err
+	}
+	var requires, replaces []string
+	for _, r := range f.Require {
+		if !strings.HasPrefix(r.Mod.Path, rancherPrefix) {
+			continue
+		}
+		suffix := ""
+		if r.Indirect {
+			suffix = " // indirect"
+		}
+		requires = append(requires, fmt.Sprintf("\t%s %s%s", r.Mod.Path, r.Mod.Version, suffix))
+	}
+	for _, r := range f.Replace {
+		if !strings.HasPrefix(r.Old.Path, rancherPrefix) {
+			continue
+		}
+		old := r.Old.Path
+		if r.Old.Version != "" {
+			old += " " + r.Old.Version
+		}
+		neu := r.New.Path
+		if r.New.Version != "" {
+			neu += " " + r.New.Version
+		}
+		replaces = append(replaces, fmt.Sprintf("\t%s => %s", old, neu))
+	}
+	var b strings.Builder
+	if len(requires) > 0 {
+		b.WriteString("require (\n")
+		for _, s := range requires {
+			b.WriteString(s)
+			b.WriteString("\n")
+		}
+		b.WriteString(")\n")
+	}
+	if len(replaces) > 0 {
+		if b.Len() > 0 {
+			b.WriteString("\n")
+		}
+		b.WriteString("replace (\n")
+		for _, s := range replaces {
+			b.WriteString(s)
+			b.WriteString("\n")
+		}
+		b.WriteString(")\n")
+	}
+	return b.String(), nil
 }
 
 func effectiveOrDash(d *dep) string {

@@ -6,24 +6,7 @@ The scheduled action runs three times a day (02, 10, 18 UTC), discovers the newe
 
 <!-- AUTO:DASHBOARD:START -->
 
-## Latest per release line
-
-| Line | Latest alpha | Released | Status | Webhook | Webhook released | Checked | Report |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| v2.15 | `v2.15.0-alpha3` | 2026-04-14 | ⚠️ 9 mismatches | `v0.10.0` | 2026-03-18 | 2026-04-24 | [open](reports/v2.15/v2.15.0-alpha3.md) |
-| v2.14 | `v2.14.1-alpha6` | 2026-04-23 | ⚠️ 1 mismatch | `v0.10.1-rc.5` | 2026-04-23 | 2026-04-24 | [open](reports/v2.14/v2.14.1-alpha6.md) |
-| v2.13 | `v2.13.5-alpha5` | 2026-04-22 | ⚠️ 7 mismatches | `v0.9.3` | 2026-02-18 | 2026-04-24 | [open](reports/v2.13/v2.13.5-alpha5.md) |
-| v2.12 | `v2.12.9-alpha5` | 2026-04-22 | ⚠️ 6 mismatches | `v0.8.5` | 2026-01-23 | 2026-04-24 | [open](reports/v2.12/v2.12.9-alpha5.md) |
-| v2.11 | `v2.11.13-alpha4` | 2026-04-23 | ⚠️ 5 mismatches | `v0.7.8` | 2025-11-20 | 2026-04-24 | [open](reports/v2.11/v2.11.13-alpha4.md) |
-
-## Recent runs
-
-- 2026-04-14 · [`v2.15.0-alpha3`](reports/v2.15/v2.15.0-alpha3.md) · ⚠️ 9 mismatches
-- 2026-04-23 · [`v2.11.13-alpha4`](reports/v2.11/v2.11.13-alpha4.md) · ⚠️ 5 mismatches
-- 2026-04-22 · [`v2.12.9-alpha5`](reports/v2.12/v2.12.9-alpha5.md) · ⚠️ 6 mismatches
-- 2026-04-22 · [`v2.13.5-alpha5`](reports/v2.13/v2.13.5-alpha5.md) · ⚠️ 7 mismatches
-- 2026-04-23 · [`v2.14.1-alpha6`](reports/v2.14/v2.14.1-alpha6.md) · ⚠️ 1 mismatch
-
+_No reports yet — run the workflow or add a version to the manual queue below._
 
 <!-- AUTO:DASHBOARD:END -->
 
