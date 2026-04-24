@@ -12,12 +12,15 @@ The scheduled action runs three times a day (02, 10, 18 UTC), discovers the newe
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | v2.15 | `v2.15.0-alpha3` | 2026-04-14 | ⚠️ 8 mismatches | `v0.10.0` | 2026-03-18 | 2026-04-24 | [open](reports/v2.15/v2.15.0-alpha3.md) |
 | v2.14 | `v2.14.1-alpha7` | 2026-04-24 | ✅ Clean | `v0.10.1-rc.5` | 2026-04-23 | 2026-04-24 | [open](reports/v2.14/v2.14.1-alpha7.md) |
-| v2.13 | `v2.13.5-alpha5` | 2026-04-22 | ⚠️ 6 mismatches | `v0.9.3` | 2026-02-18 | 2026-04-24 | [open](reports/v2.13/v2.13.5-alpha5.md) |
-| v2.12 | `v2.12.9-alpha5` | 2026-04-22 | ⚠️ 5 mismatches | `v0.8.5` | 2026-01-23 | 2026-04-24 | [open](reports/v2.12/v2.12.9-alpha5.md) |
-| v2.11 | `v2.11.13-alpha4` | 2026-04-23 | ⚠️ 4 mismatches | `v0.7.8` | 2025-11-20 | 2026-04-24 | [open](reports/v2.11/v2.11.13-alpha4.md) |
+| v2.13 | `v2.13.5-alpha6` | 2026-04-24 | ⚠️ 6 mismatches | `v0.9.3` | 2026-02-18 | 2026-04-24 | [open](reports/v2.13/v2.13.5-alpha6.md) |
+| v2.12 | `v2.12.9-alpha6` | 2026-04-24 | ⚠️ 5 mismatches | `v0.8.5` | 2026-01-23 | 2026-04-24 | [open](reports/v2.12/v2.12.9-alpha6.md) |
+| v2.11 | `v2.11.13-alpha5` | 2026-04-24 | ⚠️ 4 mismatches | `v0.7.8` | 2025-11-20 | 2026-04-24 | [open](reports/v2.11/v2.11.13-alpha5.md) |
 
 ## Recent runs
 
+- 2026-04-24 · [`v2.11.13-alpha5`](reports/v2.11/v2.11.13-alpha5.md) · ⚠️ 4 mismatches
+- 2026-04-24 · [`v2.12.9-alpha6`](reports/v2.12/v2.12.9-alpha6.md) · ⚠️ 5 mismatches
+- 2026-04-24 · [`v2.13.5-alpha6`](reports/v2.13/v2.13.5-alpha6.md) · ⚠️ 6 mismatches
 - 2026-04-24 · [`v2.14.1-alpha7`](reports/v2.14/v2.14.1-alpha7.md) · ✅ Clean
 - 2026-04-14 · [`v2.15.0-alpha3`](reports/v2.15/v2.15.0-alpha3.md) · ⚠️ 8 mismatches
 - 2026-04-23 · [`v2.11.13-alpha4`](reports/v2.11/v2.11.13-alpha4.md) · ⚠️ 4 mismatches
