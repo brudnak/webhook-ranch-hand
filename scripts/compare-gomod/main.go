@@ -23,6 +23,7 @@ const rancherPrefix = "github.com/rancher/"
 var ignoredPaths = map[string]bool{
 	"github.com/rancher/rancher/pkg/apis":   true,
 	"github.com/rancher/rancher/pkg/client": true,
+	"github.com/rancher/rke":                true,
 }
 
 func main() {
@@ -242,8 +243,6 @@ func cmdCompare(args []string) {
 		webhookPublished: parseMaybeTime(*webhookPublished),
 		rows:             rows,
 		now:              time.Now().UTC(),
-		rancherModPath:   fs.Arg(0),
-		webhookModPath:   fs.Arg(1),
 	})
 	if err := os.WriteFile(outPath, []byte(body), 0o644); err != nil {
 		fmt.Fprintf(os.Stderr, "compare: %v\n", err)
@@ -271,8 +270,6 @@ type reportInput struct {
 	webhookPublished time.Time
 	rows             []row
 	now              time.Time
-	rancherModPath   string
-	webhookModPath   string
 }
 
 func renderReport(in reportInput) string {
@@ -372,7 +369,7 @@ func renderReport(in reportInput) string {
 		for _, r := range ignored {
 			fmt.Fprintf(&b, "| `%s` | `%s` | `%s` |\n", shortName(r.path), effectiveOrDash(r.rancher), effectiveOrDash(r.webhook))
 		}
-		b.WriteString("\n_Rancher replaces these to in-tree paths (shown above), so the \"version\" in its go.mod is a stale pseudo-version. Webhook pins by commit hash against rancher main. The mismatch is structural and expected._\n\n")
+		b.WriteString("\n_Expected drift. `pkg/apis` and `pkg/client` are in-tree replaces in rancher (their \"versions\" are stale pseudo-versions); `rke` is a weak dependency where patch-level mismatches are accepted policy._\n\n")
 		b.WriteString("</details>\n\n")
 	}
 
@@ -392,90 +389,9 @@ func renderReport(in reportInput) string {
 		b.WriteString("\n</details>\n\n")
 	}
 
-	if in.rancherModPath != "" || in.webhookModPath != "" {
-		b.WriteString("## 📄 Sanitized `go.mod` (rancher/* stanzas only)\n\n")
-		if in.rancherModPath != "" {
-			if stanzas, err := extractRancherStanzas(in.rancherModPath); err == nil && stanzas != "" {
-				b.WriteString("<details><summary>🔍 <b>rancher/rancher</b> — click to expand</summary>\n\n")
-				b.WriteString("```go\n")
-				b.WriteString(stanzas)
-				b.WriteString("```\n\n")
-				b.WriteString("</details>\n\n")
-			}
-		}
-		if in.webhookModPath != "" {
-			if stanzas, err := extractRancherStanzas(in.webhookModPath); err == nil && stanzas != "" {
-				b.WriteString("<details><summary>🔍 <b>rancher/webhook</b> — click to expand</summary>\n\n")
-				b.WriteString("```go\n")
-				b.WriteString(stanzas)
-				b.WriteString("```\n\n")
-				b.WriteString("</details>\n\n")
-			}
-		}
-	}
-
 	b.WriteString("---\n\n")
 	fmt.Fprintf(&b, "[← Back to %s](README.md) · [Back to dashboard](../../README.md)\n", line)
 	return b.String()
-}
-
-// extractRancherStanzas re-parses a go.mod and re-synthesizes just the
-// github.com/rancher/* require and replace blocks.
-func extractRancherStanzas(path string) (string, error) {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return "", err
-	}
-	f, err := modfile.Parse(path, data, nil)
-	if err != nil {
-		return "", err
-	}
-	var requires, replaces []string
-	for _, r := range f.Require {
-		if !strings.HasPrefix(r.Mod.Path, rancherPrefix) {
-			continue
-		}
-		suffix := ""
-		if r.Indirect {
-			suffix = " // indirect"
-		}
-		requires = append(requires, fmt.Sprintf("\t%s %s%s", r.Mod.Path, r.Mod.Version, suffix))
-	}
-	for _, r := range f.Replace {
-		if !strings.HasPrefix(r.Old.Path, rancherPrefix) {
-			continue
-		}
-		old := r.Old.Path
-		if r.Old.Version != "" {
-			old += " " + r.Old.Version
-		}
-		neu := r.New.Path
-		if r.New.Version != "" {
-			neu += " " + r.New.Version
-		}
-		replaces = append(replaces, fmt.Sprintf("\t%s => %s", old, neu))
-	}
-	var b strings.Builder
-	if len(requires) > 0 {
-		b.WriteString("require (\n")
-		for _, s := range requires {
-			b.WriteString(s)
-			b.WriteString("\n")
-		}
-		b.WriteString(")\n")
-	}
-	if len(replaces) > 0 {
-		if b.Len() > 0 {
-			b.WriteString("\n")
-		}
-		b.WriteString("replace (\n")
-		for _, s := range replaces {
-			b.WriteString(s)
-			b.WriteString("\n")
-		}
-		b.WriteString(")\n")
-	}
-	return b.String(), nil
 }
 
 func effectiveOrDash(d *dep) string {
