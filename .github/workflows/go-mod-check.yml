@@ -17,10 +17,10 @@ jobs:
       DISCOVERY_MAX_AGE_DAYS: "30"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Set up Go
-        uses: actions/setup-go@0aaccfd150d50ccaeb58ebd88d36e91967a5f35b # v5.4.0
+        uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
         with:
           go-version-file: scripts/compare-gomod/go.mod
 
@@ -164,9 +164,9 @@ jobs:
               echo "::endgroup::"
               continue
             fi
-            rm -rf /tmp/rancher-src && mkdir /tmp/rancher-src
-            unzip -q /tmp/rancher.zip -d /tmp/rancher-src
-            RANCHER_DIR=$(find /tmp/rancher-src -maxdepth 1 -type d -name 'rancher-*' | head -n1)
+            rm -rf /tmp/extract_rancher && mkdir /tmp/extract_rancher
+            unzip -q /tmp/rancher.zip -d /tmp/extract_rancher
+            RANCHER_DIR=$(find /tmp/extract_rancher -mindepth 1 -maxdepth 1 -type d | head -n1)
 
             if [ ! -f "$RANCHER_DIR/go.mod" ] || [ ! -f "$RANCHER_DIR/build.yaml" ]; then
               echo "::error::$VERSION: missing go.mod or build.yaml in extracted source"
@@ -194,9 +194,9 @@ jobs:
               echo "::endgroup::"
               continue
             fi
-            rm -rf /tmp/webhook-src && mkdir /tmp/webhook-src
-            unzip -q /tmp/webhook.zip -d /tmp/webhook-src
-            WEBHOOK_DIR=$(find /tmp/webhook-src -maxdepth 1 -type d -name 'webhook-*' | head -n1)
+            rm -rf /tmp/extract_webhook && mkdir /tmp/extract_webhook
+            unzip -q /tmp/webhook.zip -d /tmp/extract_webhook
+            WEBHOOK_DIR=$(find /tmp/extract_webhook -mindepth 1 -maxdepth 1 -type d | head -n1)
             if [ ! -f "$WEBHOOK_DIR/go.mod" ]; then
               echo "::error::$VERSION: webhook source has no go.mod"
               echo "$VERSION" >> /tmp/failed.txt
