@@ -11,13 +11,14 @@ The scheduled action runs three times a day (02, 10, 18 UTC), discovers the newe
 | Line | Latest alpha | Released | Status | Webhook | Webhook released | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | v2.15 | `v2.15.0-alpha3` | 2026-04-14 | ⚠️ 8 mismatches | `v0.10.0` | 2026-03-18 | 2026-04-24 | [open](reports/v2.15/v2.15.0-alpha3.md) |
-| v2.14 | `v2.14.1-alpha11` | 2026-04-28 | ✅ Clean | `v0.10.4-rc.1` | 2026-04-28 | 2026-04-28 | [open](reports/v2.14/v2.14.1-alpha11.md) |
+| v2.14 | `v2.14.1-alpha12` | 2026-04-29 | ✅ Clean | `v0.10.4-rc.1` | 2026-04-28 | 2026-04-29 | [open](reports/v2.14/v2.14.1-alpha12.md) |
 | v2.13 | `v2.13.5-alpha7` | 2026-04-28 | ⚠️ 6 mismatches | `v0.9.4-rc.1` | 2026-04-28 | 2026-04-28 | [open](reports/v2.13/v2.13.5-alpha7.md) |
 | v2.12 | `v2.12.9-alpha7` | 2026-04-28 | ⚠️ 5 mismatches | `v0.8.6-rc.1` | 2026-04-28 | 2026-04-28 | [open](reports/v2.12/v2.12.9-alpha7.md) |
 | v2.11 | `v2.11.13-alpha6` | 2026-04-28 | ⚠️ 4 mismatches | `v0.7.9-rc.1` | 2026-04-28 | 2026-04-28 | [open](reports/v2.11/v2.11.13-alpha6.md) |
 
 ## Recent runs
 
+- 2026-04-29 · [`v2.14.1-alpha12`](reports/v2.14/v2.14.1-alpha12.md) · ✅ Clean
 - 2026-04-28 · [`v2.11.13-alpha6`](reports/v2.11/v2.11.13-alpha6.md) · ⚠️ 4 mismatches
 - 2026-04-28 · [`v2.12.9-alpha7`](reports/v2.12/v2.12.9-alpha7.md) · ⚠️ 5 mismatches
 - 2026-04-28 · [`v2.13.5-alpha7`](reports/v2.13/v2.13.5-alpha7.md) · ⚠️ 6 mismatches
@@ -27,7 +28,6 @@ The scheduled action runs three times a day (02, 10, 18 UTC), discovers the newe
 - 2026-04-24 · [`v2.12.9-alpha6`](reports/v2.12/v2.12.9-alpha6.md) · ⚠️ 5 mismatches
 - 2026-04-24 · [`v2.13.5-alpha6`](reports/v2.13/v2.13.5-alpha6.md) · ⚠️ 6 mismatches
 - 2026-04-24 · [`v2.14.1-alpha7`](reports/v2.14/v2.14.1-alpha7.md) · ✅ Clean
-- 2026-04-14 · [`v2.15.0-alpha3`](reports/v2.15/v2.15.0-alpha3.md) · ⚠️ 8 mismatches
 
 
 <!-- AUTO:DASHBOARD:END -->
