@@ -2,10 +2,11 @@
 
 # v2.14 reports
 
-7 report(s) for release line v2.14.
+8 report(s) for release line v2.14.
 
 | Alpha | Released | Status | Webhook | Webhook released | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- |
+| `v2.14.2-alpha2` | 2026-05-15 | ⚠️ 7 mismatches | `v0.10.4` | 2026-04-29 | 2026-05-15 | [open](v2.14.2-alpha2.md) |
 | `v2.14.2-alpha1` | 2026-05-11 | ✅ Clean | `v0.10.4` | 2026-04-29 | 2026-05-12 | [open](v2.14.2-alpha1.md) |
 | `v2.14.1-alpha13` | 2026-04-29 | ✅ Clean | `v0.10.4-rc.1` | 2026-04-28 | 2026-04-30 | [open](v2.14.1-alpha13.md) |
 | `v2.14.1-alpha12` | 2026-04-29 | ✅ Clean | `v0.10.4-rc.1` | 2026-04-28 | 2026-04-29 | [open](v2.14.1-alpha12.md) |
