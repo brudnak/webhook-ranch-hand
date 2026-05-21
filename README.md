@@ -11,13 +11,15 @@ The scheduled action runs three times a day (02, 10, 18 UTC), discovers the newe
 | Line | Latest alpha | Released | Status | Webhook | Webhook released | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | v2.15 | `v2.15.0-alpha4` | 2026-05-08 | ⚠️ 7 mismatches | `v0.11.0-rc.2` | 2026-04-03 | 2026-05-08 | [open](reports/v2.15/v2.15.0-alpha4.md) |
-| v2.14 | `v2.14.2-alpha5` | 2026-05-20 | ⚠️ 1 mismatch | `v0.10.5-rc.4` | 2026-05-19 | 2026-05-20 | [open](reports/v2.14/v2.14.2-alpha5.md) |
+| v2.14 | `v2.14.2-alpha6` | 2026-05-21 | ⚠️ 1 mismatch | `v0.10.5-rc.4` | 2026-05-19 | 2026-05-21 | [open](reports/v2.14/v2.14.2-alpha6.md) |
 | v2.13 | `v2.13.6-alpha5` | 2026-05-20 | ⚠️ 1 mismatch | `v0.9.5-rc.5` | 2026-05-19 | 2026-05-21 | [open](reports/v2.13/v2.13.6-alpha5.md) |
-| v2.12 | `v2.12.10-alpha3` | 2026-05-18 | ⚠️ 5 mismatches | `v0.8.6` | 2026-04-29 | 2026-05-18 | [open](reports/v2.12/v2.12.10-alpha3.md) |
+| v2.12 | `v2.12.10-alpha4` | 2026-05-21 | ⚠️ 5 mismatches | `v0.8.6` | 2026-04-29 | 2026-05-21 | [open](reports/v2.12/v2.12.10-alpha4.md) |
 | v2.11 | `v2.11.13-alpha6` | 2026-04-28 | ⚠️ 4 mismatches | `v0.7.9-rc.1` | 2026-04-28 | 2026-04-28 | [open](reports/v2.11/v2.11.13-alpha6.md) |
 
 ## Recent runs
 
+- 2026-05-21 · [`v2.12.10-alpha4`](reports/v2.12/v2.12.10-alpha4.md) · ⚠️ 5 mismatches
+- 2026-05-21 · [`v2.14.2-alpha6`](reports/v2.14/v2.14.2-alpha6.md) · ⚠️ 1 mismatch
 - 2026-05-20 · [`v2.13.6-alpha5`](reports/v2.13/v2.13.6-alpha5.md) · ⚠️ 1 mismatch
 - 2026-05-20 · [`v2.14.2-alpha5`](reports/v2.14/v2.14.2-alpha5.md) · ⚠️ 1 mismatch
 - 2026-05-20 · [`v2.14.2-alpha4`](reports/v2.14/v2.14.2-alpha4.md) · ⚠️ 1 mismatch
@@ -26,8 +28,6 @@ The scheduled action runs three times a day (02, 10, 18 UTC), discovers the newe
 - 2026-05-15 · [`v2.12.10-alpha2`](reports/v2.12/v2.12.10-alpha2.md) · ⚠️ 5 mismatches
 - 2026-05-15 · [`v2.14.2-alpha2`](reports/v2.14/v2.14.2-alpha2.md) · ⚠️ 7 mismatches
 - 2026-05-15 · [`v2.13.6-alpha3`](reports/v2.13/v2.13.6-alpha3.md) · ⚠️ 6 mismatches
-- 2026-05-11 · [`v2.12.10-alpha1`](reports/v2.12/v2.12.10-alpha1.md) · ⚠️ 5 mismatches
-- 2026-05-11 · [`v2.13.6-alpha1`](reports/v2.13/v2.13.6-alpha1.md) · ⚠️ 6 mismatches
 
 
 <!-- AUTO:DASHBOARD:END -->
