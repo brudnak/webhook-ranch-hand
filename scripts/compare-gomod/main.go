@@ -48,7 +48,9 @@ func main() {
 func usage() {
 	fmt.Fprintf(os.Stderr, `Usage:
   %s compare -version VERSION [-webhook WEBHOOK] [-webhook-build BUILD]
-              [-rancher-published RFC3339] [-webhook-published RFC3339]
+              [-rancher-date RFC3339] [-rancher-date-source SOURCE]
+              [-rancher-image IMAGE] [-rancher-revision SHA]
+              [-webhook-published RFC3339]
               [-reports-dir DIR] <rancher.mod> <webhook.mod>
   %s index   [-reports-dir DIR] [-readme FILE]
 `, os.Args[0], os.Args[0])
@@ -200,7 +202,11 @@ func cmdCompare(args []string) {
 	version := fs.String("version", "", "Rancher version tag (required, e.g. v2.14.0-alpha12)")
 	webhook := fs.String("webhook", "", "Webhook version tag (e.g. v0.10.0-rc.11)")
 	webhookBuild := fs.String("webhook-build", "", "Webhook build string (e.g. 109.0.0+up0.10.0-rc.11)")
-	rancherPublished := fs.String("rancher-published", "", "Rancher tag release date (RFC3339)")
+	rancherDate := fs.String("rancher-date", "", "Rancher source date (RFC3339)")
+	rancherDateSource := fs.String("rancher-date-source", "", "Rancher source date kind (e.g. image)")
+	rancherImage := fs.String("rancher-image", "", "Rancher image used for discovery")
+	rancherRevision := fs.String("rancher-revision", "", "Rancher source revision from image metadata")
+	rancherPublished := fs.String("rancher-published", "", "Deprecated alias for -rancher-date")
 	webhookPublished := fs.String("webhook-published", "", "Webhook tag release date (RFC3339)")
 	reportsDir := fs.String("reports-dir", "reports", "Root directory for reports")
 	_ = fs.Parse(args)
@@ -234,12 +240,19 @@ func cmdCompare(args []string) {
 		os.Exit(1)
 	}
 	outPath := filepath.Join(outDir, *version+".md")
+	rancherDateValue := *rancherDate
+	if rancherDateValue == "" {
+		rancherDateValue = *rancherPublished
+	}
 
 	body := renderReport(reportInput{
 		version:          *version,
 		webhook:          *webhook,
 		webhookBuild:     *webhookBuild,
-		rancherPublished: parseMaybeTime(*rancherPublished),
+		rancherDate:      parseMaybeTime(rancherDateValue),
+		rancherDateSrc:   *rancherDateSource,
+		rancherImage:     *rancherImage,
+		rancherRevision:  *rancherRevision,
 		webhookPublished: parseMaybeTime(*webhookPublished),
 		rows:             rows,
 		now:              time.Now().UTC(),
@@ -266,7 +279,10 @@ type reportInput struct {
 	version          string
 	webhook          string
 	webhookBuild     string
-	rancherPublished time.Time
+	rancherDate      time.Time
+	rancherDateSrc   string
+	rancherImage     string
+	rancherRevision  string
 	webhookPublished time.Time
 	rows             []row
 	now              time.Time
@@ -299,8 +315,17 @@ func renderReport(in reportInput) string {
 	if in.webhookBuild != "" {
 		fmt.Fprintf(&b, "webhook_build: %s\n", in.webhookBuild)
 	}
-	if !in.rancherPublished.IsZero() {
-		fmt.Fprintf(&b, "rancher_published: %s\n", in.rancherPublished.Format(time.RFC3339))
+	if !in.rancherDate.IsZero() {
+		fmt.Fprintf(&b, "rancher_date: %s\n", in.rancherDate.Format(time.RFC3339))
+	}
+	if in.rancherDateSrc != "" {
+		fmt.Fprintf(&b, "rancher_date_source: %s\n", normalizeDateSource(in.rancherDateSrc))
+	}
+	if in.rancherImage != "" {
+		fmt.Fprintf(&b, "rancher_image: %s\n", in.rancherImage)
+	}
+	if in.rancherRevision != "" {
+		fmt.Fprintf(&b, "rancher_revision: %s\n", in.rancherRevision)
 	}
 	if !in.webhookPublished.IsZero() {
 		fmt.Fprintf(&b, "webhook_published: %s\n", in.webhookPublished.Format(time.RFC3339))
@@ -317,9 +342,15 @@ func renderReport(in reportInput) string {
 	fmt.Fprintf(&b, "[← Back to %s](README.md) · [Back to dashboard](../../README.md)\n\n", line)
 	fmt.Fprintf(&b, "# %s\n\n", in.version)
 
-	b.WriteString("| Side | Tag | Released | Source |\n| --- | --- | --- | --- |\n")
+	b.WriteString("| Side | Tag | Date | Source |\n| --- | --- | --- | --- |\n")
 	rancherSrc := fmt.Sprintf("[go.mod](https://github.com/rancher/rancher/blob/%s/go.mod) · [build.yaml](https://github.com/rancher/rancher/blob/%s/build.yaml)", in.version, in.version)
-	fmt.Fprintf(&b, "| Rancher | `%s` | %s | %s |\n", in.version, fmtDateCell(in.rancherPublished), rancherSrc)
+	if in.rancherImage != "" {
+		rancherSrc += " · image `" + in.rancherImage + "`"
+	}
+	if in.rancherRevision != "" {
+		rancherSrc += " · revision `" + shortSHA(in.rancherRevision) + "`"
+	}
+	fmt.Fprintf(&b, "| Rancher | `%s` | %s | %s |\n", in.version, fmtDateCell(in.rancherDate), rancherSrc)
 	if in.webhook != "" {
 		webhookTagCell := "`" + in.webhook + "`"
 		if in.webhookBuild != "" {
@@ -416,6 +447,39 @@ func fmtDateShort(t time.Time) string {
 	return t.Format("2006-01-02")
 }
 
+func normalizeDateSource(s string) string {
+	switch strings.ToLower(strings.TrimSpace(s)) {
+	case "image", "image_created", "image-created":
+		return "image"
+	case "release", "published", "github_release":
+		return "release"
+	case "commit", "tag", "git":
+		return "commit"
+	default:
+		return "-"
+	}
+}
+
+func dateSourceLabel(s string) string {
+	switch normalizeDateSource(s) {
+	case "image":
+		return "Image built"
+	case "release":
+		return "Released"
+	case "commit":
+		return "Commit"
+	default:
+		return "Rancher date"
+	}
+}
+
+func shortSHA(s string) string {
+	if len(s) > 12 {
+		return s[:12]
+	}
+	return s
+}
+
 func plural(singular, plural string, n int) string {
 	if n == 1 {
 		return singular
@@ -428,7 +492,10 @@ type reportMeta struct {
 	line             string
 	webhook          string
 	webhookBuild     string
-	rancherPublished time.Time
+	rancherDate      time.Time
+	rancherDateSrc   string
+	rancherImage     string
+	rancherRevision  string
 	webhookPublished time.Time
 	generated        time.Time
 	mismatches       int
@@ -464,12 +531,7 @@ func cmdIndex(args []string) {
 	}
 	for line := range byLine {
 		rs := byLine[line]
-		sort.SliceStable(rs, func(i, j int) bool {
-			if !rs[i].generated.Equal(rs[j].generated) {
-				return rs[i].generated.After(rs[j].generated)
-			}
-			return versionLess(rs[j].version, rs[i].version)
-		})
+		sortReports(rs)
 		byLine[line] = rs
 	}
 
@@ -563,13 +625,25 @@ func parseReportMeta(path, reportsDir string) (reportMeta, error) {
 			m.webhook = val
 		case "webhook_build":
 			m.webhookBuild = val
+		case "rancher_date":
+			if t, err := time.Parse(time.RFC3339, val); err == nil {
+				m.rancherDate = t
+			}
+		case "rancher_date_source":
+			m.rancherDateSrc = normalizeDateSource(val)
+		case "rancher_image":
+			m.rancherImage = val
+		case "rancher_revision":
+			m.rancherRevision = val
 		case "generated":
 			if t, err := time.Parse(time.RFC3339, val); err == nil {
 				m.generated = t
 			}
 		case "rancher_published":
-			if t, err := time.Parse(time.RFC3339, val); err == nil {
-				m.rancherPublished = t
+			if m.rancherDate.IsZero() {
+				if t, err := time.Parse(time.RFC3339, val); err == nil {
+					m.rancherDate = t
+				}
 			}
 		case "webhook_published":
 			if t, err := time.Parse(time.RFC3339, val); err == nil {
@@ -593,6 +667,9 @@ func parseReportMeta(path, reportsDir string) (reportMeta, error) {
 	if m.version == "" {
 		return m, fmt.Errorf("no <!-- meta --> block found")
 	}
+	if m.rancherDateSrc == "" {
+		m.rancherDateSrc = "release"
+	}
 	return m, nil
 }
 
@@ -601,17 +678,18 @@ func renderLineIndex(line string, reports []reportMeta) string {
 	b.WriteString("[← Back to dashboard](../../README.md)\n\n")
 	fmt.Fprintf(&b, "# %s reports\n\n", line)
 	fmt.Fprintf(&b, "%d report(s) for release line %s.\n\n", len(reports), line)
-	b.WriteString("| Alpha | Released | Status | Webhook | Webhook released | Checked | Report |\n")
-	b.WriteString("| --- | --- | --- | --- | --- | --- | --- |\n")
+	b.WriteString("| Alpha | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |\n")
+	b.WriteString("| --- | --- | --- | --- | --- | --- | --- | --- |\n")
 	for _, r := range reports {
 		reportFile := filepath.Base(r.relPath)
 		webhookCell := "-"
 		if r.webhook != "" {
 			webhookCell = "`" + r.webhook + "`"
 		}
-		fmt.Fprintf(&b, "| `%s` | %s | %s | %s | %s | %s | [open](%s) |\n",
+		fmt.Fprintf(&b, "| `%s` | %s | %s | %s | %s | %s | %s | [open](%s) |\n",
 			r.version,
-			fmtDateShort(r.rancherPublished),
+			fmtDateShort(r.rancherDate),
+			dateSourceLabel(r.rancherDateSrc),
 			r.status(),
 			webhookCell,
 			fmtDateShort(r.webhookPublished),
@@ -651,20 +729,15 @@ func renderDashboard(byLine map[string][]reportMeta) string {
 	for _, rs := range byLine {
 		all = append(all, rs...)
 	}
-	sort.SliceStable(all, func(i, j int) bool {
-		if !all[i].generated.Equal(all[j].generated) {
-			return all[i].generated.After(all[j].generated)
-		}
-		return versionLess(all[j].version, all[i].version)
-	})
+	sortReports(all)
 
 	var b strings.Builder
 	b.WriteString("## Latest per release line\n\n")
 	if len(lines) == 0 {
 		b.WriteString("_No reports yet._\n")
 	} else {
-		b.WriteString("| Line | Latest alpha | Released | Status | Webhook | Webhook released | Checked | Report |\n")
-		b.WriteString("| --- | --- | --- | --- | --- | --- | --- | --- |\n")
+		b.WriteString("| Line | Latest alpha | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |\n")
+		b.WriteString("| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n")
 		for _, l := range lines {
 			rs := byLine[l]
 			if len(rs) == 0 {
@@ -675,10 +748,11 @@ func renderDashboard(byLine map[string][]reportMeta) string {
 			if latest.webhook != "" {
 				webhookCell = "`" + latest.webhook + "`"
 			}
-			fmt.Fprintf(&b, "| %s | `%s` | %s | %s | %s | %s | %s | [open](reports/%s) |\n",
+			fmt.Fprintf(&b, "| %s | `%s` | %s | %s | %s | %s | %s | %s | [open](reports/%s) |\n",
 				l,
 				latest.version,
-				fmtDateShort(latest.rancherPublished),
+				fmtDateShort(latest.rancherDate),
+				dateSourceLabel(latest.rancherDateSrc),
 				latest.status(),
 				webhookCell,
 				fmtDateShort(latest.webhookPublished),
@@ -695,7 +769,7 @@ func renderDashboard(byLine map[string][]reportMeta) string {
 			n = len(all)
 		}
 		for _, r := range all[:n] {
-			when := fmtDateShort(r.rancherPublished)
+			when := fmtDateShort(r.rancherDate)
 			if when == "-" {
 				when = fmtDateShort(r.generated)
 			}
@@ -705,6 +779,24 @@ func renderDashboard(byLine map[string][]reportMeta) string {
 	}
 
 	return b.String()
+}
+
+func sortReports(reports []reportMeta) {
+	sort.SliceStable(reports, func(i, j int) bool {
+		id := reportSortDate(reports[i])
+		jd := reportSortDate(reports[j])
+		if !id.Equal(jd) {
+			return id.After(jd)
+		}
+		return versionLess(reports[j].version, reports[i].version)
+	})
+}
+
+func reportSortDate(r reportMeta) time.Time {
+	if !r.rancherDate.IsZero() {
+		return r.rancherDate
+	}
+	return r.generated
 }
 
 func versionLess(a, b string) bool {

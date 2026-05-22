@@ -15,6 +15,12 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       DISCOVERY_MAX_AGE_DAYS: "30"
+      DISCOVERY_TAGS_PER_LINE: "10"
+      RANCHER_IMAGE_SOURCES: >-
+        stgregistry.suse.com/rancher/rancher
+        docker.io/rancher/rancher
+        registry.rancher.com/rancher/rancher
+        registry.suse.com/rancher/rancher
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -33,39 +39,69 @@ jobs:
       - name: Install system tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y jq unzip curl
+          sudo apt-get install -y jq unzip curl skopeo
 
       - name: Discover latest alpha per release line
         id: discover
         run: |
           set -euo pipefail
 
-          # Pull recent prereleases, keep only -alphaN tags within the age window.
-          # Emit one tag+published_at pair per line (TSV).
-          gh api \
-            -H "Accept: application/vnd.github+json" \
-            "/repos/rancher/rancher/releases?per_page=100" \
-            --jq "[.[]
-                   | select(.prerelease)
-                   | select(.tag_name | test(\"^v[0-9]+\\\\.[0-9]+\\\\.[0-9]+-alpha[0-9]+$\"))
-                   | select((.published_at | fromdateiso8601) > (now - ${DISCOVERY_MAX_AGE_DAYS} * 86400))
-                   | [.tag_name, .published_at] | @tsv][]" \
-            > /tmp/all-alphas.tsv || {
-              echo "::warning::release discovery failed; falling back to manual queue only"
-              : > /tmp/all-alphas.tsv
-            }
+          : > /tmp/all-alphas.tsv
 
-          # Keep newest alpha per v2.X line. API returns newest-first, so take the
-          # first occurrence per line. Output: <tag>\t<published_at>
-          awk -F'\t' '
+          for image in $RANCHER_IMAGE_SOURCES; do
+            echo "::group::Inspecting $image"
+            if ! tags_json=$(skopeo list-tags "docker://${image}" 2>/tmp/skopeo-tags.err); then
+              echo "::warning::could not list tags for $image: $(cat /tmp/skopeo-tags.err)"
+              echo "::endgroup::"
+              continue
+            fi
+
+            mapfile -t tags < <(jq -r '.Tags[]
+              | select(test("^v[0-9]+\\.[0-9]+\\.[0-9]+-alpha[0-9]+$"))' <<<"$tags_json" \
+              | sort -Vr \
+              | awk -F. -v limit="$DISCOVERY_TAGS_PER_LINE" '
+                  {
+                    key = $1 "." $2
+                    if (++seen[key] <= limit) print
+                  }
+                ')
+
+            for tag in "${tags[@]}"; do
+              if awk -F'\t' -v tag="$tag" '$1 == tag { found=1 } END { exit !found }' /tmp/all-alphas.tsv; then
+                continue
+              fi
+              if ! config_json=$(skopeo inspect --override-os linux --override-arch amd64 --config "docker://${image}:${tag}" 2>/tmp/skopeo-config.err); then
+                echo "::warning::could not inspect $image:$tag: $(cat /tmp/skopeo-config.err)"
+                continue
+              fi
+              jq -r --arg source "$image" --arg tag "$tag" --arg max_age_days "$DISCOVERY_MAX_AGE_DAYS" '
+                .created as $created
+                | select($created != null)
+                | select(($created | fromdateiso8601) > (now - (($max_age_days | tonumber) * 86400)))
+                | [
+                    $tag,
+                    $created,
+                    "image",
+                    $source,
+                    ((.config.Labels["org.opencontainers.image.revision"] // "")),
+                    ([(.config.Env // [])[]? | select(startswith("CATTLE_RANCHER_WEBHOOK_VERSION=")) | sub("^CATTLE_RANCHER_WEBHOOK_VERSION="; "")] | first // "")
+                  ] | @tsv
+              ' <<<"$config_json" >> /tmp/all-alphas.tsv
+            done
+            echo "::endgroup::"
+          done
+
+          # Keep newest alpha per v2.X line by image creation date.
+          # Output: <tag>\t<image_created>\t<source_kind>\t<image_source>\t<revision>\t<webhook_build>
+          sort -t $'\t' -k2,2r /tmp/all-alphas.tsv | awk -F'\t' '
             {
               split($1, parts, ".")
               key = parts[1] "." parts[2]
               if (!seen[key]++) print
             }
-          ' /tmp/all-alphas.tsv > /tmp/candidates.tsv
+          ' > /tmp/candidates.tsv
 
-          echo "Discovered candidates (latest alpha per line, last ${DISCOVERY_MAX_AGE_DAYS}d):"
+          echo "Discovered candidates (latest alpha image per line, last ${DISCOVERY_MAX_AGE_DAYS}d):"
           cat /tmp/candidates.tsv || true
 
           # Plain tag list used by the merge step below.
@@ -113,17 +149,35 @@ jobs:
           : > /tmp/succeeded.txt
           : > /tmp/failed.txt
 
-          # Helper: get a publish date for a tag. Prefers release.published_at
-          # (more meaningful — "when the release was cut"); falls back to the
-          # tag's commit committer.date if there's no full release (only a tag).
-          resolve_published() {
+          inspect_rancher_image() {
+            local tag="$1"
+            local image
+            for image in $RANCHER_IMAGE_SOURCES; do
+              if config_json=$(skopeo inspect --override-os linux --override-arch amd64 --config "docker://${image}:${tag}" 2>/dev/null); then
+                jq -r --arg source "$image" --arg tag "$tag" '
+                  [
+                    $tag,
+                    (.created // ""),
+                    "image",
+                    $source,
+                    ((.config.Labels["org.opencontainers.image.revision"] // "")),
+                    ([(.config.Env // [])[]? | select(startswith("CATTLE_RANCHER_WEBHOOK_VERSION=")) | sub("^CATTLE_RANCHER_WEBHOOK_VERSION="; "")] | first // "")
+                  ] | @tsv
+                ' <<<"$config_json"
+                return 0
+              fi
+            done
+            return 1
+          }
+
+          resolve_github_date() {
             local repo="$1" tag="$2"
             local out
-            if out=$(gh api "/repos/${repo}/releases/tags/${tag}" --jq .published_at 2>/dev/null) && [ -n "$out" ] && [ "$out" != "null" ]; then
+            if out=$(curl -fsSL "https://api.github.com/repos/${repo}/releases/tags/${tag}" | jq -r '.published_at // .created_at // empty' 2>/dev/null) && [ -n "$out" ]; then
               printf '%s\n' "$out"
               return
             fi
-            if out=$(gh api "/repos/${repo}/commits/${tag}" --jq .commit.committer.date 2>/dev/null) && [ -n "$out" ] && [ "$out" != "null" ]; then
+            if out=$(curl -fsSL "https://api.github.com/repos/${repo}/commits/${tag}" | jq -r '.commit.committer.date // empty' 2>/dev/null) && [ -n "$out" ]; then
               printf '%s\n' "$out"
               return
             fi
@@ -147,14 +201,25 @@ jobs:
 
             echo "::group::Processing $VERSION"
 
-            # Look up rancher release date. If this candidate came from the
-            # discovery step, we already have it in candidates.tsv; otherwise
-            # (manual queue entry) fetch it now.
-            RANCHER_PUBLISHED=$(awk -F'\t' -v t="$VERSION" '$1==t {print $2; exit}' /tmp/candidates.tsv)
-            if [ -z "${RANCHER_PUBLISHED:-}" ]; then
-              RANCHER_PUBLISHED=$(resolve_published rancher/rancher "$VERSION" || true)
+            # Look up Rancher image metadata. Discovery entries already have it;
+            # manual queue entries are inspected against the configured registries.
+            RANCHER_IMAGE_BUILT=$(awk -F'\t' -v t="$VERSION" '$1==t {print $2; exit}' /tmp/candidates.tsv)
+            RANCHER_DATE_SOURCE=$(awk -F'\t' -v t="$VERSION" '$1==t {print $3; exit}' /tmp/candidates.tsv)
+            RANCHER_IMAGE_SOURCE=$(awk -F'\t' -v t="$VERSION" '$1==t {print $4; exit}' /tmp/candidates.tsv)
+            RANCHER_REVISION=$(awk -F'\t' -v t="$VERSION" '$1==t {print $5; exit}' /tmp/candidates.tsv)
+            RANCHER_IMAGE_WEBHOOK_BUILD=$(awk -F'\t' -v t="$VERSION" '$1==t {print $6; exit}' /tmp/candidates.tsv)
+            if [ -z "${RANCHER_IMAGE_BUILT:-}" ]; then
+              if meta=$(inspect_rancher_image "$VERSION"); then
+                RANCHER_IMAGE_BUILT=$(awk -F'\t' '{print $2; exit}' <<<"$meta")
+                RANCHER_DATE_SOURCE=$(awk -F'\t' '{print $3; exit}' <<<"$meta")
+                RANCHER_IMAGE_SOURCE=$(awk -F'\t' '{print $4; exit}' <<<"$meta")
+                RANCHER_REVISION=$(awk -F'\t' '{print $5; exit}' <<<"$meta")
+                RANCHER_IMAGE_WEBHOOK_BUILD=$(awk -F'\t' '{print $6; exit}' <<<"$meta")
+              fi
             fi
-            echo "rancher published: ${RANCHER_PUBLISHED:-unknown}"
+            echo "rancher image built: ${RANCHER_IMAGE_BUILT:-unknown}"
+            echo "rancher image source: ${RANCHER_IMAGE_SOURCE:-unknown}"
+            echo "rancher revision: ${RANCHER_REVISION:-unknown}"
 
             # Download rancher source and extract go.mod + webhook version pin.
             RANCHER_URL="https://github.com/rancher/rancher/archive/refs/tags/${VERSION}.zip"
@@ -184,6 +249,9 @@ jobs:
               echo "::endgroup::"
               continue
             fi
+            if [ -n "${RANCHER_IMAGE_WEBHOOK_BUILD:-}" ] && [ "$RANCHER_IMAGE_WEBHOOK_BUILD" != "$WEBHOOK_BUILD" ]; then
+              echo "::warning::$VERSION: image webhook pin $RANCHER_IMAGE_WEBHOOK_BUILD differs from build.yaml $WEBHOOK_BUILD; using build.yaml"
+            fi
             WEBHOOK_TAG=$(echo "$WEBHOOK_BUILD" | sed -E 's/^[0-9]+\.[0-9]+\.[0-9]+\+up/v/')
             echo "webhook pin: $WEBHOOK_BUILD  ->  tag $WEBHOOK_TAG"
 
@@ -205,14 +273,17 @@ jobs:
             fi
             cp "$WEBHOOK_DIR/go.mod" /tmp/webhook_go.mod
 
-            WEBHOOK_PUBLISHED=$(resolve_published rancher/webhook "$WEBHOOK_TAG" || true)
-            echo "webhook published: ${WEBHOOK_PUBLISHED:-unknown}"
+            WEBHOOK_PUBLISHED=$(resolve_github_date rancher/webhook "$WEBHOOK_TAG" || true)
+            echo "webhook date: ${WEBHOOK_PUBLISHED:-unknown}"
 
             if ! "$COMPARE_BIN" compare \
               -version "$VERSION" \
               -webhook "$WEBHOOK_TAG" \
               -webhook-build "$WEBHOOK_BUILD" \
-              ${RANCHER_PUBLISHED:+-rancher-published "$RANCHER_PUBLISHED"} \
+              ${RANCHER_IMAGE_BUILT:+-rancher-date "$RANCHER_IMAGE_BUILT"} \
+              ${RANCHER_DATE_SOURCE:+-rancher-date-source "$RANCHER_DATE_SOURCE"} \
+              ${RANCHER_IMAGE_SOURCE:+-rancher-image "$RANCHER_IMAGE_SOURCE:$VERSION"} \
+              ${RANCHER_REVISION:+-rancher-revision "$RANCHER_REVISION"} \
               ${WEBHOOK_PUBLISHED:+-webhook-published "$WEBHOOK_PUBLISHED"} \
               /tmp/rancher_go.mod /tmp/webhook_go.mod; then
               echo "::error::$VERSION: compare failed"
