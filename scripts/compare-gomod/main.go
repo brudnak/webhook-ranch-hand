@@ -268,11 +268,13 @@ func parseMaybeTime(s string) time.Time {
 	if s == "" {
 		return time.Time{}
 	}
-	t, err := time.Parse(time.RFC3339, s)
-	if err != nil {
-		return time.Time{}
+	for _, layout := range []string{time.RFC3339Nano, time.RFC3339} {
+		t, err := time.Parse(layout, s)
+		if err == nil {
+			return t.UTC()
+		}
 	}
-	return t.UTC()
+	return time.Time{}
 }
 
 type reportInput struct {
@@ -626,7 +628,7 @@ func parseReportMeta(path, reportsDir string) (reportMeta, error) {
 		case "webhook_build":
 			m.webhookBuild = val
 		case "rancher_date":
-			if t, err := time.Parse(time.RFC3339, val); err == nil {
+			if t := parseMaybeTime(val); !t.IsZero() {
 				m.rancherDate = t
 			}
 		case "rancher_date_source":
@@ -636,17 +638,17 @@ func parseReportMeta(path, reportsDir string) (reportMeta, error) {
 		case "rancher_revision":
 			m.rancherRevision = val
 		case "generated":
-			if t, err := time.Parse(time.RFC3339, val); err == nil {
+			if t := parseMaybeTime(val); !t.IsZero() {
 				m.generated = t
 			}
 		case "rancher_published":
 			if m.rancherDate.IsZero() {
-				if t, err := time.Parse(time.RFC3339, val); err == nil {
+				if t := parseMaybeTime(val); !t.IsZero() {
 					m.rancherDate = t
 				}
 			}
 		case "webhook_published":
-			if t, err := time.Parse(time.RFC3339, val); err == nil {
+			if t := parseMaybeTime(val); !t.IsZero() {
 				m.webhookPublished = t
 			}
 		case "mismatches":

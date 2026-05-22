@@ -75,9 +75,10 @@ jobs:
                 continue
               fi
               jq -r --arg source "$image" --arg tag "$tag" --arg max_age_days "$DISCOVERY_MAX_AGE_DAYS" '
+                def epoch: sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601;
                 .created as $created
                 | select($created != null)
-                | select(($created | fromdateiso8601) > (now - (($max_age_days | tonumber) * 86400)))
+                | select(($created | epoch) > (now - (($max_age_days | tonumber) * 86400)))
                 | [
                     $tag,
                     $created,
