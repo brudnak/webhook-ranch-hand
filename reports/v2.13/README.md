@@ -2,10 +2,11 @@
 
 # v2.13 reports
 
-11 report(s) for release line v2.13.
+12 report(s) for release line v2.13.
 
 | Alpha | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| `v2.13.7-alpha4` | 2026-06-19 | Image built | ⚠️ 4 mismatches | `v0.9.6-rc.6` | 2026-06-18 | 2026-06-19 | [open](v2.13.7-alpha4.md) |
 | `v2.13.7-alpha3` | 2026-06-17 | Image built | ✅ Clean | `v0.9.6-rc.4` | 2026-06-11 | 2026-06-18 | [open](v2.13.7-alpha3.md) |
 | `v2.13.7-alpha2` | 2026-06-16 | Image built | ✅ Clean | `v0.9.6-rc.4` | 2026-06-11 | 2026-06-17 | [open](v2.13.7-alpha2.md) |
 | `v2.13.7-alpha1` | 2026-06-11 | Image built | ✅ Clean | `v0.9.6-rc.4` | 2026-06-11 | 2026-06-11 | [open](v2.13.7-alpha1.md) |
