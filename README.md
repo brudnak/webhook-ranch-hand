@@ -11,24 +11,24 @@ The scheduled action runs three times a day (02, 10, 18 UTC), discovers the newe
 | Line | Latest alpha | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | v2.15 | `v2.15.0-alpha14` | 2026-06-26 | Image built | ⚠️ 3 mismatches | `v0.11.0-rc.20` | 2026-06-19 | 2026-06-26 | [open](reports/v2.15/v2.15.0-alpha14.md) |
-| v2.14 | `v2.14.3-alpha5` | 2026-06-23 | Image built | ✅ Clean | `v0.10.7-rc.8` | 2026-06-22 | 2026-06-23 | [open](reports/v2.14/v2.14.3-alpha5.md) |
-| v2.13 | `v2.13.7-alpha6` | 2026-06-23 | Image built | ✅ Clean | `v0.9.6-rc.8` | 2026-06-23 | 2026-06-24 | [open](reports/v2.13/v2.13.7-alpha6.md) |
-| v2.12 | `v2.12.11-alpha4` | 2026-06-23 | Image built | ⚠️ 1 mismatch | `v0.8.7-rc.10` | 2026-06-23 | 2026-06-24 | [open](reports/v2.12/v2.12.11-alpha4.md) |
-| v2.11 | `v2.11.15-alpha3` | 2026-06-23 | Image built | ✅ Clean | `v0.7.10-rc.12` | 2026-06-23 | 2026-06-24 | [open](reports/v2.11/v2.11.15-alpha3.md) |
+| v2.14 | `v2.14.3-alpha6` | 2026-06-26 | Image built | ⚠️ 1 mismatch | `v0.10.7` | 2026-06-23 | 2026-06-27 | [open](reports/v2.14/v2.14.3-alpha6.md) |
+| v2.13 | `v2.13.7-alpha7` | 2026-06-26 | Image built | ⚠️ 1 mismatch | `v0.9.6` | 2026-06-23 | 2026-06-27 | [open](reports/v2.13/v2.13.7-alpha7.md) |
+| v2.12 | `v2.12.11-alpha5` | 2026-06-26 | Image built | ⚠️ 2 mismatches | `v0.8.7` | 2026-06-23 | 2026-06-27 | [open](reports/v2.12/v2.12.11-alpha5.md) |
+| v2.11 | `v2.11.15-alpha4` | 2026-06-26 | Image built | ⚠️ 1 mismatch | `v0.7.10` | 2026-06-24 | 2026-06-27 | [open](reports/v2.11/v2.11.15-alpha4.md) |
 | v2.10 | `v2.10.12-alpha1` | 2026-05-20 | Image built | ⚠️ 1 mismatch | `v0.6.12` | 2026-01-27 | 2026-05-22 | [open](reports/v2.10/v2.10.12-alpha1.md) |
 
 ## Recent runs
 
+- 2026-06-26 · [`v2.11.15-alpha4`](reports/v2.11/v2.11.15-alpha4.md) · ⚠️ 1 mismatch
+- 2026-06-26 · [`v2.14.3-alpha6`](reports/v2.14/v2.14.3-alpha6.md) · ⚠️ 1 mismatch
+- 2026-06-26 · [`v2.12.11-alpha5`](reports/v2.12/v2.12.11-alpha5.md) · ⚠️ 2 mismatches
+- 2026-06-26 · [`v2.13.7-alpha7`](reports/v2.13/v2.13.7-alpha7.md) · ⚠️ 1 mismatch
 - 2026-06-26 · [`v2.15.0-alpha14`](reports/v2.15/v2.15.0-alpha14.md) · ⚠️ 3 mismatches
 - 2026-06-23 · [`v2.11.15-alpha3`](reports/v2.11/v2.11.15-alpha3.md) · ✅ Clean
 - 2026-06-23 · [`v2.13.7-alpha6`](reports/v2.13/v2.13.7-alpha6.md) · ✅ Clean
 - 2026-06-23 · [`v2.12.11-alpha4`](reports/v2.12/v2.12.11-alpha4.md) · ⚠️ 1 mismatch
 - 2026-06-23 · [`v2.14.3-alpha5`](reports/v2.14/v2.14.3-alpha5.md) · ✅ Clean
 - 2026-06-23 · [`v2.13.7-alpha5`](reports/v2.13/v2.13.7-alpha5.md) · ✅ Clean
-- 2026-06-23 · [`v2.12.11-alpha3`](reports/v2.12/v2.12.11-alpha3.md) · ⚠️ 1 mismatch
-- 2026-06-23 · [`v2.11.15-alpha2`](reports/v2.11/v2.11.15-alpha2.md) · ✅ Clean
-- 2026-06-19 · [`v2.13.7-alpha4`](reports/v2.13/v2.13.7-alpha4.md) · ⚠️ 4 mismatches
-- 2026-06-19 · [`v2.14.3-alpha4`](reports/v2.14/v2.14.3-alpha4.md) · ⚠️ 4 mismatches
 
 
 <!-- AUTO:DASHBOARD:END -->
