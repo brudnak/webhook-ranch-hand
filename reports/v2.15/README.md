@@ -2,10 +2,11 @@
 
 # v2.15 reports
 
-14 report(s) for release line v2.15.
+15 report(s) for release line v2.15.
 
 | Alpha | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| `v2.15.0-alpha18` | 2026-07-14 | Image built | ⚠️ 8 mismatches | `v0.11.0-rc.23` | 2026-07-13 | 2026-07-14 | [open](v2.15.0-alpha18.md) |
 | `v2.15.0-alpha17` | 2026-07-09 | Image built | ⚠️ 3 mismatches | `v0.11.0-rc.21` | 2026-06-30 | 2026-07-09 | [open](v2.15.0-alpha17.md) |
 | `v2.15.0-alpha16` | 2026-07-03 | Image built | ⚠️ 3 mismatches | `v0.11.0-rc.21` | 2026-06-30 | 2026-07-03 | [open](v2.15.0-alpha16.md) |
 | `v2.15.0-alpha15` | 2026-07-02 | Image built | ⚠️ 3 mismatches | `v0.11.0-rc.21` | 2026-06-30 | 2026-07-02 | [open](v2.15.0-alpha15.md) |
