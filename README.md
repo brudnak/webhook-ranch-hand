@@ -10,7 +10,7 @@ The scheduled action runs three times a day (02, 10, 18 UTC), discovers the newe
 
 | Line | Latest alpha | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| v2.15 | `v2.15.0-alpha18` | 2026-07-14 | Image built | ⚠️ 8 mismatches | `v0.11.0-rc.23` | 2026-07-13 | 2026-07-14 | [open](reports/v2.15/v2.15.0-alpha18.md) |
+| v2.15 | `v2.15.0-alpha19` | 2026-07-14 | Image built | ⚠️ 8 mismatches | `v0.11.0-rc.23` | 2026-07-13 | 2026-07-15 | [open](reports/v2.15/v2.15.0-alpha19.md) |
 | v2.14 | `v2.14.4-alpha1` | 2026-07-02 | Image built | ⚠️ 1 mismatch | `v0.10.7` | 2026-06-23 | 2026-07-02 | [open](reports/v2.14/v2.14.4-alpha1.md) |
 | v2.13 | `v2.13.8-alpha2` | 2026-07-14 | Image built | ⚠️ 6 mismatches | `v0.9.6` | 2026-06-23 | 2026-07-14 | [open](reports/v2.13/v2.13.8-alpha2.md) |
 | v2.12 | `v2.12.12-alpha2` | 2026-07-14 | Image built | ⚠️ 7 mismatches | `v0.8.7` | 2026-06-23 | 2026-07-14 | [open](reports/v2.12/v2.12.12-alpha2.md) |
@@ -19,6 +19,7 @@ The scheduled action runs three times a day (02, 10, 18 UTC), discovers the newe
 
 ## Recent runs
 
+- 2026-07-14 · [`v2.15.0-alpha19`](reports/v2.15/v2.15.0-alpha19.md) · ⚠️ 8 mismatches
 - 2026-07-14 · [`v2.15.0-alpha18`](reports/v2.15/v2.15.0-alpha18.md) · ⚠️ 8 mismatches
 - 2026-07-14 · [`v2.11.16-alpha2`](reports/v2.11/v2.11.16-alpha2.md) · ⚠️ 5 mismatches
 - 2026-07-14 · [`v2.12.12-alpha2`](reports/v2.12/v2.12.12-alpha2.md) · ⚠️ 7 mismatches
@@ -28,7 +29,6 @@ The scheduled action runs three times a day (02, 10, 18 UTC), discovers the newe
 - 2026-07-02 · [`v2.11.16-alpha1`](reports/v2.11/v2.11.16-alpha1.md) · ⚠️ 1 mismatch
 - 2026-07-02 · [`v2.14.4-alpha1`](reports/v2.14/v2.14.4-alpha1.md) · ⚠️ 1 mismatch
 - 2026-07-02 · [`v2.13.8-alpha1`](reports/v2.13/v2.13.8-alpha1.md) · ⚠️ 1 mismatch
-- 2026-07-02 · [`v2.12.12-alpha1`](reports/v2.12/v2.12.12-alpha1.md) · ⚠️ 2 mismatches
 
 
 <!-- AUTO:DASHBOARD:END -->
