@@ -2,10 +2,11 @@
 
 # v2.12 reports
 
-15 report(s) for release line v2.12.
+16 report(s) for release line v2.12.
 
 | Alpha | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| `v2.12.12-alpha4` | 2026-07-15 | Image built | ⚠️ 7 mismatches | `v0.8.7` | 2026-06-23 | 2026-07-16 | [open](v2.12.12-alpha4.md) |
 | `v2.12.12-alpha3` | 2026-07-15 | Image built | ⚠️ 7 mismatches | `v0.8.7` | 2026-06-23 | 2026-07-15 | [open](v2.12.12-alpha3.md) |
 | `v2.12.12-alpha2` | 2026-07-14 | Image built | ⚠️ 7 mismatches | `v0.8.7` | 2026-06-23 | 2026-07-14 | [open](v2.12.12-alpha2.md) |
 | `v2.12.12-alpha1` | 2026-07-02 | Image built | ⚠️ 2 mismatches | `v0.8.7` | 2026-06-23 | 2026-07-02 | [open](v2.12.12-alpha1.md) |
