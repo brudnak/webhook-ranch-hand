@@ -39,6 +39,8 @@ Need a one-off check (e.g. an RC, or an older alpha)? Add it as a bullet between
 
 <!-- MANUAL-QUEUE:START -->
 
+- v2.15.0-rc2
+
 <!-- example: -->
 <!-- - v2.14.0-rc.1    -->
 <!-- - v2.11.13-alpha1 -->
