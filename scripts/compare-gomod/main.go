@@ -34,6 +34,8 @@ func main() {
 	switch os.Args[1] {
 	case "compare":
 		cmdCompare(os.Args[2:])
+	case "discover":
+		cmdDiscover(os.Args[2:])
 	case "index":
 		cmdIndex(os.Args[2:])
 	case "-h", "--help", "help":
@@ -50,10 +52,13 @@ func usage() {
   %s compare -version VERSION [-webhook WEBHOOK] [-webhook-build BUILD]
               [-rancher-date RFC3339] [-rancher-date-source SOURCE]
               [-rancher-image IMAGE] [-rancher-revision SHA]
+              [-rancher-image-revision SHA] [-rancher-source-ref REF]
+              [-build-stream STREAM] [-build-flavor FLAVOR]
               [-webhook-published RFC3339]
               [-reports-dir DIR] <rancher.mod> <webhook.mod>
+  %s discover [discovery options]
   %s index   [-reports-dir DIR] [-readme FILE]
-`, os.Args[0], os.Args[0])
+`, os.Args[0], os.Args[0], os.Args[0])
 }
 
 type dep struct {
@@ -187,7 +192,7 @@ func classify(rancherDeps, webhookDeps map[string]*dep) []row {
 
 func shortName(p string) string { return strings.TrimPrefix(p, rancherPrefix) }
 
-var lineRE = regexp.MustCompile(`^v(\d+)\.(\d+)\.`)
+var lineRE = regexp.MustCompile(`^v(\d+)\.(\d+)(?:[.-]|$)`)
 
 func extractLine(version string) string {
 	m := lineRE.FindStringSubmatch(version)
@@ -205,7 +210,11 @@ func cmdCompare(args []string) {
 	rancherDate := fs.String("rancher-date", "", "Rancher source date (RFC3339)")
 	rancherDateSource := fs.String("rancher-date-source", "", "Rancher source date kind (e.g. image)")
 	rancherImage := fs.String("rancher-image", "", "Rancher image used for discovery")
-	rancherRevision := fs.String("rancher-revision", "", "Rancher source revision from image metadata")
+	rancherRevision := fs.String("rancher-revision", "", "Rancher OSS source revision")
+	rancherImageRevision := fs.String("rancher-image-revision", "", "Image source repository revision (may be rancher-prime)")
+	rancherSourceRef := fs.String("rancher-source-ref", "", "Git ref used to read Rancher source (defaults to VERSION)")
+	buildStream := fs.String("build-stream", "", "Build stream (for example alpha or prime-head)")
+	buildFlavor := fs.String("build-flavor", "", "Build flavor (for example community or prime)")
 	rancherPublished := fs.String("rancher-published", "", "Deprecated alias for -rancher-date")
 	webhookPublished := fs.String("webhook-published", "", "Webhook tag release date (RFC3339)")
 	reportsDir := fs.String("reports-dir", "reports", "Root directory for reports")
@@ -253,6 +262,10 @@ func cmdCompare(args []string) {
 		rancherDateSrc:   *rancherDateSource,
 		rancherImage:     *rancherImage,
 		rancherRevision:  *rancherRevision,
+		imageRevision:    *rancherImageRevision,
+		rancherSourceRef: *rancherSourceRef,
+		buildStream:      normalizedBuildStream(*buildStream, *version),
+		buildFlavor:      normalizeBuildFlavor(*buildFlavor),
 		webhookPublished: parseMaybeTime(*webhookPublished),
 		rows:             rows,
 		now:              time.Now().UTC(),
@@ -285,6 +298,10 @@ type reportInput struct {
 	rancherDateSrc   string
 	rancherImage     string
 	rancherRevision  string
+	imageRevision    string
+	rancherSourceRef string
+	buildStream      string
+	buildFlavor      string
 	webhookPublished time.Time
 	rows             []row
 	now              time.Time
@@ -329,6 +346,18 @@ func renderReport(in reportInput) string {
 	if in.rancherRevision != "" {
 		fmt.Fprintf(&b, "rancher_revision: %s\n", in.rancherRevision)
 	}
+	if in.imageRevision != "" {
+		fmt.Fprintf(&b, "rancher_image_revision: %s\n", in.imageRevision)
+	}
+	if in.rancherSourceRef != "" {
+		fmt.Fprintf(&b, "rancher_source_ref: %s\n", in.rancherSourceRef)
+	}
+	if in.buildStream != "" {
+		fmt.Fprintf(&b, "build_stream: %s\n", in.buildStream)
+	}
+	if in.buildFlavor != "" {
+		fmt.Fprintf(&b, "build_flavor: %s\n", in.buildFlavor)
+	}
 	if !in.webhookPublished.IsZero() {
 		fmt.Fprintf(&b, "webhook_published: %s\n", in.webhookPublished.Format(time.RFC3339))
 	}
@@ -343,14 +372,31 @@ func renderReport(in reportInput) string {
 	line := extractLine(in.version)
 	fmt.Fprintf(&b, "[← Back to %s](README.md) · [Back to dashboard](../../README.md)\n\n", line)
 	fmt.Fprintf(&b, "# %s\n\n", in.version)
+	if in.buildStream != "" || in.buildFlavor != "" {
+		parts := make([]string, 0, 2)
+		if in.buildStream != "" {
+			parts = append(parts, "stream `"+in.buildStream+"`")
+		}
+		if in.buildFlavor != "" {
+			parts = append(parts, "flavor `"+in.buildFlavor+"`")
+		}
+		fmt.Fprintf(&b, "**Build:** %s\n\n", strings.Join(parts, " · "))
+	}
 
 	b.WriteString("| Side | Tag | Date | Source |\n| --- | --- | --- | --- |\n")
-	rancherSrc := fmt.Sprintf("[go.mod](https://github.com/rancher/rancher/blob/%s/go.mod) · [build.yaml](https://github.com/rancher/rancher/blob/%s/build.yaml)", in.version, in.version)
+	sourceRef := in.rancherSourceRef
+	if sourceRef == "" {
+		sourceRef = in.version
+	}
+	rancherSrc := fmt.Sprintf("[go.mod](https://github.com/rancher/rancher/blob/%s/go.mod) · [build.yaml](https://github.com/rancher/rancher/blob/%s/build.yaml)", sourceRef, sourceRef)
 	if in.rancherImage != "" {
 		rancherSrc += " · image `" + in.rancherImage + "`"
 	}
 	if in.rancherRevision != "" {
-		rancherSrc += " · revision `" + shortSHA(in.rancherRevision) + "`"
+		rancherSrc += " · OSS revision `" + shortSHA(in.rancherRevision) + "`"
+	}
+	if in.imageRevision != "" && in.imageRevision != in.rancherRevision {
+		rancherSrc += " · image revision `" + shortSHA(in.imageRevision) + "`"
 	}
 	fmt.Fprintf(&b, "| Rancher | `%s` | %s | %s |\n", in.version, fmtDateCell(in.rancherDate), rancherSrc)
 	if in.webhook != "" {
@@ -482,6 +528,47 @@ func shortSHA(s string) string {
 	return s
 }
 
+var (
+	alphaTagRE         = regexp.MustCompile(`^v\d+\.\d+\.\d+-alpha\d+$`)
+	primeHeadTagRE     = regexp.MustCompile(`^v\d+\.\d+\.\d+-[0-9a-fA-F]{7,40}-head$`)
+	communityHeadTagRE = regexp.MustCompile(`^v\d+\.\d+-[0-9a-fA-F]{7,40}-head$`)
+)
+
+func normalizedBuildStream(stream, version string) string {
+	switch strings.ToLower(strings.TrimSpace(stream)) {
+	case "alpha":
+		return "alpha"
+	case "prime-head", "prime_head", "prime head":
+		return "prime-head"
+	case "community-head", "community_head", "community head":
+		return "community-head"
+	case "":
+		switch {
+		case alphaTagRE.MatchString(version):
+			return "alpha"
+		case primeHeadTagRE.MatchString(version):
+			return "prime-head"
+		case communityHeadTagRE.MatchString(version):
+			return "community-head"
+		default:
+			return "other"
+		}
+	default:
+		return strings.ToLower(strings.TrimSpace(stream))
+	}
+}
+
+func normalizeBuildFlavor(flavor string) string {
+	switch strings.ToLower(strings.TrimSpace(flavor)) {
+	case "prime":
+		return "prime"
+	case "community", "oss":
+		return "community"
+	default:
+		return strings.ToLower(strings.TrimSpace(flavor))
+	}
+}
+
 func plural(singular, plural string, n int) string {
 	if n == 1 {
 		return singular
@@ -498,6 +585,10 @@ type reportMeta struct {
 	rancherDateSrc   string
 	rancherImage     string
 	rancherRevision  string
+	imageRevision    string
+	rancherSourceRef string
+	buildStream      string
+	buildFlavor      string
 	webhookPublished time.Time
 	generated        time.Time
 	mismatches       int
@@ -637,6 +728,14 @@ func parseReportMeta(path, reportsDir string) (reportMeta, error) {
 			m.rancherImage = val
 		case "rancher_revision":
 			m.rancherRevision = val
+		case "rancher_image_revision":
+			m.imageRevision = val
+		case "rancher_source_ref":
+			m.rancherSourceRef = val
+		case "build_stream":
+			m.buildStream = normalizedBuildStream(val, m.version)
+		case "build_flavor":
+			m.buildFlavor = normalizeBuildFlavor(val)
 		case "generated":
 			if t := parseMaybeTime(val); !t.IsZero() {
 				m.generated = t
@@ -672,6 +771,9 @@ func parseReportMeta(path, reportsDir string) (reportMeta, error) {
 	if m.rancherDateSrc == "" {
 		m.rancherDateSrc = "release"
 	}
+	if m.buildStream == "" {
+		m.buildStream = normalizedBuildStream("", m.version)
+	}
 	return m, nil
 }
 
@@ -680,16 +782,17 @@ func renderLineIndex(line string, reports []reportMeta) string {
 	b.WriteString("[← Back to dashboard](../../README.md)\n\n")
 	fmt.Fprintf(&b, "# %s reports\n\n", line)
 	fmt.Fprintf(&b, "%d report(s) for release line %s.\n\n", len(reports), line)
-	b.WriteString("| Alpha | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |\n")
-	b.WriteString("| --- | --- | --- | --- | --- | --- | --- | --- |\n")
+	b.WriteString("| Build | Stream | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |\n")
+	b.WriteString("| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n")
 	for _, r := range reports {
 		reportFile := filepath.Base(r.relPath)
 		webhookCell := "-"
 		if r.webhook != "" {
 			webhookCell = "`" + r.webhook + "`"
 		}
-		fmt.Fprintf(&b, "| `%s` | %s | %s | %s | %s | %s | %s | [open](%s) |\n",
+		fmt.Fprintf(&b, "| `%s` | `%s` | %s | %s | %s | %s | %s | %s | [open](%s) |\n",
 			r.version,
+			r.buildStream,
 			fmtDateShort(r.rancherDate),
 			dateSourceLabel(r.rancherDateSrc),
 			r.status(),
@@ -734,32 +837,39 @@ func renderDashboard(byLine map[string][]reportMeta) string {
 	sortReports(all)
 
 	var b strings.Builder
-	b.WriteString("## Latest per release line\n\n")
+	b.WriteString("## Latest per release line and stream\n\n")
 	if len(lines) == 0 {
 		b.WriteString("_No reports yet._\n")
 	} else {
-		b.WriteString("| Line | Latest alpha | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |\n")
-		b.WriteString("| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n")
+		b.WriteString("| Line | Stream | Latest build | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |\n")
+		b.WriteString("| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n")
 		for _, l := range lines {
 			rs := byLine[l]
 			if len(rs) == 0 {
 				continue
 			}
-			latest := rs[0]
-			webhookCell := "-"
-			if latest.webhook != "" {
-				webhookCell = "`" + latest.webhook + "`"
+			seenStreams := map[string]bool{}
+			for _, latest := range rs {
+				if seenStreams[latest.buildStream] {
+					continue
+				}
+				seenStreams[latest.buildStream] = true
+				webhookCell := "-"
+				if latest.webhook != "" {
+					webhookCell = "`" + latest.webhook + "`"
+				}
+				fmt.Fprintf(&b, "| %s | `%s` | `%s` | %s | %s | %s | %s | %s | %s | [open](reports/%s) |\n",
+					l,
+					latest.buildStream,
+					latest.version,
+					fmtDateShort(latest.rancherDate),
+					dateSourceLabel(latest.rancherDateSrc),
+					latest.status(),
+					webhookCell,
+					fmtDateShort(latest.webhookPublished),
+					fmtDateShort(latest.generated),
+					latest.relPath)
 			}
-			fmt.Fprintf(&b, "| %s | `%s` | %s | %s | %s | %s | %s | %s | [open](reports/%s) |\n",
-				l,
-				latest.version,
-				fmtDateShort(latest.rancherDate),
-				dateSourceLabel(latest.rancherDateSrc),
-				latest.status(),
-				webhookCell,
-				fmtDateShort(latest.webhookPublished),
-				fmtDateShort(latest.generated),
-				latest.relPath)
 		}
 		b.WriteString("\n")
 	}
@@ -775,7 +885,7 @@ func renderDashboard(byLine map[string][]reportMeta) string {
 			if when == "-" {
 				when = fmtDateShort(r.generated)
 			}
-			fmt.Fprintf(&b, "- %s · [`%s`](reports/%s) · %s\n", when, r.version, r.relPath, r.status())
+			fmt.Fprintf(&b, "- %s · `%s` · [`%s`](reports/%s) · %s\n", when, r.buildStream, r.version, r.relPath, r.status())
 		}
 		b.WriteString("\n")
 	}
@@ -804,7 +914,7 @@ func reportSortDate(r reportMeta) time.Time {
 func versionLess(a, b string) bool {
 	ap := parseVersion(a)
 	bp := parseVersion(b)
-	for i := 0; i < 4; i++ {
+	for i := 0; i < 3; i++ {
 		if ap.nums[i] != bp.nums[i] {
 			return ap.nums[i] < bp.nums[i]
 		}
@@ -816,6 +926,9 @@ func versionLess(a, b string) bool {
 	if ap.suffix != "" && bp.suffix == "" {
 		return true
 	}
+	if ap.nums[3] != bp.nums[3] {
+		return ap.nums[3] < bp.nums[3]
+	}
 	return ap.suffix < bp.suffix
 }
 
@@ -824,7 +937,8 @@ type parsedVersion struct {
 	suffix string
 }
 
-var versionRE = regexp.MustCompile(`^v(\d+)\.(\d+)(?:\.(\d+))?(?:-([a-zA-Z]+)(\d+))?`)
+var versionRE = regexp.MustCompile(`^v(\d+)\.(\d+)(?:\.(\d+))?(?:-(.+))?$`)
+var numberedPrereleaseRE = regexp.MustCompile(`^([a-zA-Z]+)(\d+)$`)
 
 func parseVersion(s string) parsedVersion {
 	m := versionRE.FindStringSubmatch(s)
@@ -837,9 +951,11 @@ func parseVersion(s string) parsedVersion {
 	if m[3] != "" {
 		p.nums[2], _ = strconv.Atoi(m[3])
 	}
-	if m[5] != "" {
-		p.nums[3], _ = strconv.Atoi(m[5])
-		p.suffix = "-" + m[4] + m[5]
+	if m[4] != "" {
+		p.suffix = "-" + m[4]
+		if prerelease := numberedPrereleaseRE.FindStringSubmatch(m[4]); len(prerelease) == 3 {
+			p.nums[3], _ = strconv.Atoi(prerelease[2])
+		}
 	}
 	return p
 }
