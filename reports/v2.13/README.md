@@ -2,10 +2,12 @@
 
 # v2.13 reports
 
-7 report(s) for release line v2.13.
+9 report(s) for release line v2.13.
 
 | Build | Stream | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `v2.13.9-3c701ae653167c47fb5ed10739b83d6c5afdc4f4-head` | `prime-head` | 2026-08-19 | Image built | ✅ Clean | `v0.9.8-rc.3` | 2026-08-19 | 2026-08-19 | [open](v2.13.9-3c701ae653167c47fb5ed10739b83d6c5afdc4f4-head.md) |
+| `v2.13.9-alpha1` | `alpha` | 2026-08-19 | Image built | ✅ Clean | `v0.9.8-rc.2` | 2026-08-14 | 2026-08-19 | [open](v2.13.9-alpha1.md) |
 | `v2.13.6-alpha5` | `alpha` | 2026-05-20 | Image built | ⚠️ 1 mismatch | `v0.9.5-rc.5` | 2026-05-19 | 2026-05-22 | [open](v2.13.6-alpha5.md) |
 | `v2.13.6-alpha4` | `alpha` | 2026-05-18 | Image built | ⚠️ 6 mismatches | `v0.9.5-rc.3` | 2026-05-13 | 2026-05-22 | [open](v2.13.6-alpha4.md) |
 | `v2.13.6-alpha3` | `alpha` | 2026-05-15 | Image built | ⚠️ 6 mismatches | `v0.9.5-rc.3` | 2026-05-13 | 2026-05-22 | [open](v2.13.6-alpha3.md) |

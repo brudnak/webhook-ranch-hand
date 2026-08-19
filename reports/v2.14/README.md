@@ -2,10 +2,12 @@
 
 # v2.14 reports
 
-11 report(s) for release line v2.14.
+13 report(s) for release line v2.14.
 
 | Build | Stream | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `v2.14.5-3ecba0669009ab61e637a2ec929d461a70c7bc5f-head` | `prime-head` | 2026-08-19 | Image built | ✅ Clean | `v0.10.10-rc.3` | 2026-08-19 | 2026-08-19 | [open](v2.14.5-3ecba0669009ab61e637a2ec929d461a70c7bc5f-head.md) |
+| `v2.14.5-alpha1` | `alpha` | 2026-08-19 | Image built | ✅ Clean | `v0.10.10-rc.2` | 2026-08-14 | 2026-08-19 | [open](v2.14.5-alpha1.md) |
 | `v2.14.2-alpha6` | `alpha` | 2026-05-21 | Image built | ⚠️ 1 mismatch | `v0.10.5-rc.4` | 2026-05-19 | 2026-05-22 | [open](v2.14.2-alpha6.md) |
 | `v2.14.2-alpha5` | `alpha` | 2026-05-20 | Image built | ⚠️ 1 mismatch | `v0.10.5-rc.4` | 2026-05-19 | 2026-05-22 | [open](v2.14.2-alpha5.md) |
 | `v2.14.2-alpha4` | `alpha` | 2026-05-20 | Image built | ⚠️ 1 mismatch | `v0.10.5-rc.4` | 2026-05-19 | 2026-05-22 | [open](v2.14.2-alpha4.md) |
