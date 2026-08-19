@@ -8,25 +8,27 @@ The scheduled action runs three times a day (02, 10, 18 UTC). For each active `v
 
 ## Latest per release line and stream
 
+_Prime head labels use a six-character SHA on this page; open a report for the full tag and revision details._
+
 | Line | Stream | Latest build | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| v2.16 | `prime-head` | `v2.16.0-fd256a672775f120722d714cbce028c4ee1889bf-head` | 2026-08-19 | Image built | ⚠️ 3 mismatches | `v0.12.1-rc.2` | 2026-08-12 | 2026-08-19 | [open](reports/v2.16/v2.16.0-fd256a672775f120722d714cbce028c4ee1889bf-head.md) |
-| v2.15 | `prime-head` | `v2.15.1-d45de428bcd814eb29f650f15ac30231715a7d9c-head` | 2026-08-19 | Image built | ⚠️ 3 mismatches | `v0.11.1-rc.3` | 2026-08-14 | 2026-08-19 | [open](reports/v2.15/v2.15.1-d45de428bcd814eb29f650f15ac30231715a7d9c-head.md) |
-| v2.15 | `alpha` | `v2.15.1-alpha1` | 2026-08-05 | Image built | ⚠️ 7 mismatches | `v0.11.1-rc.1` | 2026-08-05 | 2026-08-19 | [open](reports/v2.15/v2.15.1-alpha1.md) |
-| v2.14 | `prime-head` | `v2.14.5-3ecba0669009ab61e637a2ec929d461a70c7bc5f-head` | 2026-08-19 | Image built | ✅ Clean | `v0.10.10-rc.3` | 2026-08-19 | 2026-08-19 | [open](reports/v2.14/v2.14.5-3ecba0669009ab61e637a2ec929d461a70c7bc5f-head.md) |
-| v2.14 | `alpha` | `v2.14.5-alpha1` | 2026-08-19 | Image built | ✅ Clean | `v0.10.10-rc.2` | 2026-08-14 | 2026-08-19 | [open](reports/v2.14/v2.14.5-alpha1.md) |
-| v2.13 | `prime-head` | `v2.13.9-3c701ae653167c47fb5ed10739b83d6c5afdc4f4-head` | 2026-08-19 | Image built | ✅ Clean | `v0.9.8-rc.3` | 2026-08-19 | 2026-08-19 | [open](reports/v2.13/v2.13.9-3c701ae653167c47fb5ed10739b83d6c5afdc4f4-head.md) |
-| v2.13 | `alpha` | `v2.13.9-alpha1` | 2026-08-19 | Image built | ✅ Clean | `v0.9.8-rc.2` | 2026-08-14 | 2026-08-19 | [open](reports/v2.13/v2.13.9-alpha1.md) |
-| v2.12 | `alpha` | `v2.12.13-alpha1` | 2026-08-19 | Image built | ⚠️ 4 mismatches | `v0.8.9` | 2026-07-27 | 2026-08-19 | [open](reports/v2.12/v2.12.13-alpha1.md) |
-| v2.11 | `alpha` | `v2.11.17-alpha1` | 2026-08-19 | Image built | ⚠️ 5 mismatches | `v0.7.10` | 2026-06-24 | 2026-08-19 | [open](reports/v2.11/v2.11.17-alpha1.md) |
-| v2.10 | `alpha` | `v2.10.12-alpha1` | 2026-05-20 | Image built | ⚠️ 1 mismatch | `v0.6.12` | 2026-01-27 | 2026-05-22 | [open](reports/v2.10/v2.10.12-alpha1.md) |
+| v2.16 | `prime-head` | [`v2.16.0-fd256a-head`](reports/v2.16/v2.16.0-fd256a672775f120722d714cbce028c4ee1889bf-head.md) | 2026-08-19 | Image built | ⚠️ 3 mismatches | `v0.12.1-rc.2` | 2026-08-12 | 2026-08-19 | [open](reports/v2.16/v2.16.0-fd256a672775f120722d714cbce028c4ee1889bf-head.md) |
+| v2.15 | `prime-head` | [`v2.15.1-d45de4-head`](reports/v2.15/v2.15.1-d45de428bcd814eb29f650f15ac30231715a7d9c-head.md) | 2026-08-19 | Image built | ⚠️ 3 mismatches | `v0.11.1-rc.3` | 2026-08-14 | 2026-08-19 | [open](reports/v2.15/v2.15.1-d45de428bcd814eb29f650f15ac30231715a7d9c-head.md) |
+| v2.15 | `alpha` | [`v2.15.1-alpha1`](reports/v2.15/v2.15.1-alpha1.md) | 2026-08-05 | Image built | ⚠️ 7 mismatches | `v0.11.1-rc.1` | 2026-08-05 | 2026-08-19 | [open](reports/v2.15/v2.15.1-alpha1.md) |
+| v2.14 | `prime-head` | [`v2.14.5-3ecba0-head`](reports/v2.14/v2.14.5-3ecba0669009ab61e637a2ec929d461a70c7bc5f-head.md) | 2026-08-19 | Image built | ✅ Clean | `v0.10.10-rc.3` | 2026-08-19 | 2026-08-19 | [open](reports/v2.14/v2.14.5-3ecba0669009ab61e637a2ec929d461a70c7bc5f-head.md) |
+| v2.14 | `alpha` | [`v2.14.5-alpha1`](reports/v2.14/v2.14.5-alpha1.md) | 2026-08-19 | Image built | ✅ Clean | `v0.10.10-rc.2` | 2026-08-14 | 2026-08-19 | [open](reports/v2.14/v2.14.5-alpha1.md) |
+| v2.13 | `prime-head` | [`v2.13.9-3c701a-head`](reports/v2.13/v2.13.9-3c701ae653167c47fb5ed10739b83d6c5afdc4f4-head.md) | 2026-08-19 | Image built | ✅ Clean | `v0.9.8-rc.3` | 2026-08-19 | 2026-08-19 | [open](reports/v2.13/v2.13.9-3c701ae653167c47fb5ed10739b83d6c5afdc4f4-head.md) |
+| v2.13 | `alpha` | [`v2.13.9-alpha1`](reports/v2.13/v2.13.9-alpha1.md) | 2026-08-19 | Image built | ✅ Clean | `v0.9.8-rc.2` | 2026-08-14 | 2026-08-19 | [open](reports/v2.13/v2.13.9-alpha1.md) |
+| v2.12 | `alpha` | [`v2.12.13-alpha1`](reports/v2.12/v2.12.13-alpha1.md) | 2026-08-19 | Image built | ⚠️ 4 mismatches | `v0.8.9` | 2026-07-27 | 2026-08-19 | [open](reports/v2.12/v2.12.13-alpha1.md) |
+| v2.11 | `alpha` | [`v2.11.17-alpha1`](reports/v2.11/v2.11.17-alpha1.md) | 2026-08-19 | Image built | ⚠️ 5 mismatches | `v0.7.10` | 2026-06-24 | 2026-08-19 | [open](reports/v2.11/v2.11.17-alpha1.md) |
+| v2.10 | `alpha` | [`v2.10.12-alpha1`](reports/v2.10/v2.10.12-alpha1.md) | 2026-05-20 | Image built | ⚠️ 1 mismatch | `v0.6.12` | 2026-01-27 | 2026-05-22 | [open](reports/v2.10/v2.10.12-alpha1.md) |
 
 ## Recent runs
 
-- 2026-08-19 · `prime-head` · [`v2.14.5-3ecba0669009ab61e637a2ec929d461a70c7bc5f-head`](reports/v2.14/v2.14.5-3ecba0669009ab61e637a2ec929d461a70c7bc5f-head.md) · ✅ Clean
-- 2026-08-19 · `prime-head` · [`v2.13.9-3c701ae653167c47fb5ed10739b83d6c5afdc4f4-head`](reports/v2.13/v2.13.9-3c701ae653167c47fb5ed10739b83d6c5afdc4f4-head.md) · ✅ Clean
-- 2026-08-19 · `prime-head` · [`v2.15.1-d45de428bcd814eb29f650f15ac30231715a7d9c-head`](reports/v2.15/v2.15.1-d45de428bcd814eb29f650f15ac30231715a7d9c-head.md) · ⚠️ 3 mismatches
-- 2026-08-19 · `prime-head` · [`v2.16.0-fd256a672775f120722d714cbce028c4ee1889bf-head`](reports/v2.16/v2.16.0-fd256a672775f120722d714cbce028c4ee1889bf-head.md) · ⚠️ 3 mismatches
+- 2026-08-19 · `prime-head` · [`v2.14.5-3ecba0-head`](reports/v2.14/v2.14.5-3ecba0669009ab61e637a2ec929d461a70c7bc5f-head.md) · ✅ Clean
+- 2026-08-19 · `prime-head` · [`v2.13.9-3c701a-head`](reports/v2.13/v2.13.9-3c701ae653167c47fb5ed10739b83d6c5afdc4f4-head.md) · ✅ Clean
+- 2026-08-19 · `prime-head` · [`v2.15.1-d45de4-head`](reports/v2.15/v2.15.1-d45de428bcd814eb29f650f15ac30231715a7d9c-head.md) · ⚠️ 3 mismatches
+- 2026-08-19 · `prime-head` · [`v2.16.0-fd256a-head`](reports/v2.16/v2.16.0-fd256a672775f120722d714cbce028c4ee1889bf-head.md) · ⚠️ 3 mismatches
 - 2026-08-19 · `alpha` · [`v2.13.9-alpha1`](reports/v2.13/v2.13.9-alpha1.md) · ✅ Clean
 - 2026-08-19 · `alpha` · [`v2.12.13-alpha1`](reports/v2.12/v2.12.13-alpha1.md) · ⚠️ 4 mismatches
 - 2026-08-19 · `alpha` · [`v2.11.17-alpha1`](reports/v2.11/v2.11.17-alpha1.md) · ⚠️ 5 mismatches
