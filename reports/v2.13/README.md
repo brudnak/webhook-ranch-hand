@@ -2,10 +2,11 @@
 
 # v2.13 reports
 
-10 report(s) for release line v2.13.
+11 report(s) for release line v2.13.
 
 | Build | Stream | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `v2.13.9-7cad0dd2a6232e94993c169cf6efa15e9b5cf2d3-head` | `prime-head` | 2026-08-20 | Image built | ✅ Clean | `v0.9.8-rc.3` | 2026-08-19 | 2026-08-20 | [open](v2.13.9-7cad0dd2a6232e94993c169cf6efa15e9b5cf2d3-head.md) |
 | `v2.13.9-427f2a441c45d60c1e5f04719715b406b7986fb6-head` | `prime-head` | 2026-08-20 | Image built | ✅ Clean | `v0.9.8-rc.3` | 2026-08-19 | 2026-08-20 | [open](v2.13.9-427f2a441c45d60c1e5f04719715b406b7986fb6-head.md) |
 | `v2.13.9-3c701ae653167c47fb5ed10739b83d6c5afdc4f4-head` | `prime-head` | 2026-08-19 | Image built | ✅ Clean | `v0.9.8-rc.3` | 2026-08-19 | 2026-08-19 | [open](v2.13.9-3c701ae653167c47fb5ed10739b83d6c5afdc4f4-head.md) |
 | `v2.13.9-alpha1` | `alpha` | 2026-08-19 | Image built | ✅ Clean | `v0.9.8-rc.2` | 2026-08-14 | 2026-08-19 | [open](v2.13.9-alpha1.md) |
