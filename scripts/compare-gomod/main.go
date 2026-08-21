@@ -855,8 +855,8 @@ func renderDashboard(byLine map[string][]reportMeta) string {
 	if len(lines) == 0 {
 		b.WriteString("_No reports yet._\n")
 	} else {
-		b.WriteString("| Line | Stream | Latest build | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |\n")
-		b.WriteString("| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n")
+		b.WriteString("| Line | Stream | Latest build | Status | Webhook | Checked | Report |\n")
+		b.WriteString("| --- | --- | --- | --- | --- | --- | --- |\n")
 		for _, l := range lines {
 			rs := byLine[l]
 			if len(rs) == 0 {
@@ -872,16 +872,13 @@ func renderDashboard(byLine map[string][]reportMeta) string {
 				if latest.webhook != "" {
 					webhookCell = "`" + latest.webhook + "`"
 				}
-				fmt.Fprintf(&b, "| %s | `%s` | [`%s`](reports/%s) | %s | %s | %s | %s | %s | %s | [open](reports/%s) |\n",
+				fmt.Fprintf(&b, "| %s | `%s` | [`%s`](reports/%s) | %s | %s | %s | [open](reports/%s) |\n",
 					l,
 					latest.buildStream,
 					dashboardBuildLabel(latest.version, latest.buildStream),
 					latest.relPath,
-					fmtDateShort(latest.rancherDate),
-					dateSourceLabel(latest.rancherDateSrc),
 					latest.status(),
 					webhookCell,
-					fmtDateShort(latest.webhookPublished),
 					fmtDateShort(latest.generated),
 					latest.relPath)
 			}

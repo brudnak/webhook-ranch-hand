@@ -125,6 +125,35 @@ func TestDashboardKeepsLatestBuildPerStream(t *testing.T) {
 	}
 }
 
+func TestDashboardUsesCompactColumns(t *testing.T) {
+	t.Parallel()
+
+	report := reportMeta{
+		version:          "v2.14.5-alpha1",
+		line:             "v2.14",
+		buildStream:      "alpha",
+		rancherDate:      time.Date(2026, 8, 17, 0, 0, 0, 0, time.UTC),
+		webhookPublished: time.Date(2026, 8, 18, 0, 0, 0, 0, time.UTC),
+		generated:        time.Date(2026, 8, 19, 0, 0, 0, 0, time.UTC),
+		relPath:          "v2.14/v2.14.5-alpha1.md",
+	}
+	body := renderDashboard(map[string][]reportMeta{"v2.14": {report}})
+	latestSection, _, _ := strings.Cut(body, "## Recent runs")
+
+	wantHeader := "| Line | Stream | Latest build | Status | Webhook | Checked | Report |"
+	if !strings.Contains(latestSection, wantHeader) {
+		t.Fatalf("dashboard header missing %q:\n%s", wantHeader, latestSection)
+	}
+	for _, unwanted := range []string{"Rancher date", "Webhook date", "Source", "2026-08-17", "2026-08-18"} {
+		if strings.Contains(latestSection, unwanted) {
+			t.Errorf("latest dashboard section contains removed value %q:\n%s", unwanted, latestSection)
+		}
+	}
+	if !strings.Contains(latestSection, "2026-08-19") {
+		t.Errorf("latest dashboard section is missing the checked date:\n%s", latestSection)
+	}
+}
+
 func TestDashboardBuildLabelOnlyShortensFullPrimeHeadSHA(t *testing.T) {
 	t.Parallel()
 
