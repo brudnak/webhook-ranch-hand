@@ -2,10 +2,11 @@
 
 # v2.14 reports
 
-16 report(s) for release line v2.14.
+17 report(s) for release line v2.14.
 
 | Build | Stream | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `v2.14.5-096e380ecd8567360a32b76994190531d33b938f-head` | `prime-head` | 2026-08-21 | Image built | ⚠️ 4 mismatches | `v0.10.10-rc.3` | 2026-08-19 | 2026-08-21 | [open](v2.14.5-096e380ecd8567360a32b76994190531d33b938f-head.md) |
 | `v2.14.5-04826f1044be9a4d9a3d5ec3c00611369f9db334-head` | `prime-head` | 2026-08-21 | Image built | ⚠️ 4 mismatches | `v0.10.10-rc.3` | 2026-08-19 | 2026-08-21 | [open](v2.14.5-04826f1044be9a4d9a3d5ec3c00611369f9db334-head.md) |
 | `v2.14.5-94454b7c1dbbb5edc79cbf8ae79f830019d68703-head` | `prime-head` | 2026-08-20 | Image built | ✅ Clean | `v0.10.10-rc.3` | 2026-08-19 | 2026-08-20 | [open](v2.14.5-94454b7c1dbbb5edc79cbf8ae79f830019d68703-head.md) |
 | `v2.14.5-97845ced7ee6df9a36cae65ded9bbb73e14500b5-head` | `prime-head` | 2026-08-20 | Image built | ✅ Clean | `v0.10.10-rc.3` | 2026-08-19 | 2026-08-20 | [open](v2.14.5-97845ced7ee6df9a36cae65ded9bbb73e14500b5-head.md) |
