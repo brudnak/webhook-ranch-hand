@@ -17,7 +17,7 @@ _Prime head labels use a six-character SHA on this page; open a report for the f
 | v2.15 | `alpha` | [`v2.15.1-alpha1`](reports/v2.15/v2.15.1-alpha1.md) | ⚠️ 7 mismatches | `v0.11.1-rc.1` | 2026-08-19 | [open](reports/v2.15/v2.15.1-alpha1.md) |
 | v2.14 | `prime-head` | [`v2.14.5-096e38-head`](reports/v2.14/v2.14.5-096e380ecd8567360a32b76994190531d33b938f-head.md) | ⚠️ 4 mismatches | `v0.10.10-rc.3` | 2026-08-21 | [open](reports/v2.14/v2.14.5-096e380ecd8567360a32b76994190531d33b938f-head.md) |
 | v2.14 | `alpha` | [`v2.14.5-alpha1`](reports/v2.14/v2.14.5-alpha1.md) | ✅ Clean | `v0.10.10-rc.2` | 2026-08-19 | [open](reports/v2.14/v2.14.5-alpha1.md) |
-| v2.13 | `prime-head` | [`v2.13.9-ec2a70-head`](reports/v2.13/v2.13.9-ec2a709bb574139b6000c22dfcbf5c8a0b4dbeae-head.md) | ⚠️ 4 mismatches | `v0.9.8-rc.3` | 2026-08-21 | [open](reports/v2.13/v2.13.9-ec2a709bb574139b6000c22dfcbf5c8a0b4dbeae-head.md) |
+| v2.13 | `prime-head` | [`v2.13.9-cbe53e-head`](reports/v2.13/v2.13.9-cbe53e9ce507e4b10d42076e51f1a1b937087224-head.md) | ⚠️ 4 mismatches | `v0.9.8-rc.3` | 2026-08-22 | [open](reports/v2.13/v2.13.9-cbe53e9ce507e4b10d42076e51f1a1b937087224-head.md) |
 | v2.13 | `alpha` | [`v2.13.9-alpha1`](reports/v2.13/v2.13.9-alpha1.md) | ✅ Clean | `v0.9.8-rc.2` | 2026-08-19 | [open](reports/v2.13/v2.13.9-alpha1.md) |
 | v2.12 | `alpha` | [`v2.12.13-alpha1`](reports/v2.12/v2.12.13-alpha1.md) | ⚠️ 4 mismatches | `v0.8.9` | 2026-08-19 | [open](reports/v2.12/v2.12.13-alpha1.md) |
 | v2.11 | `alpha` | [`v2.11.17-alpha1`](reports/v2.11/v2.11.17-alpha1.md) | ⚠️ 5 mismatches | `v0.7.10` | 2026-08-19 | [open](reports/v2.11/v2.11.17-alpha1.md) |
@@ -25,6 +25,7 @@ _Prime head labels use a six-character SHA on this page; open a report for the f
 
 ## Recent runs
 
+- 2026-08-22 · `prime-head` · [`v2.13.9-cbe53e-head`](reports/v2.13/v2.13.9-cbe53e9ce507e4b10d42076e51f1a1b937087224-head.md) · ⚠️ 4 mismatches
 - 2026-08-22 · `prime-head` · [`v2.16.0-59bd05-head`](reports/v2.16/v2.16.0-59bd052e44553e77e5c570b84ed4a24dfa7b44ab-head.md) · ⚠️ 3 mismatches
 - 2026-08-22 · `prime-head` · [`v2.15.1-2e2585-head`](reports/v2.15/v2.15.1-2e25858ec600c4f6ae1c005f9f4eb7683ec9fff0-head.md) · ⚠️ 2 mismatches
 - 2026-08-21 · `prime-head` · [`v2.14.5-096e38-head`](reports/v2.14/v2.14.5-096e380ecd8567360a32b76994190531d33b938f-head.md) · ⚠️ 4 mismatches
@@ -34,7 +35,6 @@ _Prime head labels use a six-character SHA on this page; open a report for the f
 - 2026-08-21 · `prime-head` · [`v2.15.1-e8b454-head`](reports/v2.15/v2.15.1-e8b454e2146205895bb406d1b7c0ff23df8ac4c4-head.md) · ⚠️ 7 mismatches
 - 2026-08-21 · `prime-head` · [`v2.14.5-04826f-head`](reports/v2.14/v2.14.5-04826f1044be9a4d9a3d5ec3c00611369f9db334-head.md) · ⚠️ 4 mismatches
 - 2026-08-21 · `prime-head` · [`v2.16.0-ffbd1c-head`](reports/v2.16/v2.16.0-ffbd1cc914559930ba6aaa03bc434ef32aefe490-head.md) · ⚠️ 3 mismatches
-- 2026-08-21 · `prime-head` · [`v2.16.0-091397-head`](reports/v2.16/v2.16.0-0913976f2632340c1f0b349559a4627400268cae-head.md) · ⚠️ 3 mismatches
 
 
 <!-- AUTO:DASHBOARD:END -->
