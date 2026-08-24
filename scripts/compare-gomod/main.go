@@ -528,7 +528,7 @@ func shortSHA(s string) string {
 	return s
 }
 
-var dashboardPrimeHeadRE = regexp.MustCompile(`^(v\d+\.\d+\.\d+-)([0-9a-fA-F]{40})(-head)$`)
+var dashboardPrimeHeadRE = regexp.MustCompile(`^(v\d+\.\d+\.\d+-)([0-9a-fA-F]{7}|[0-9a-fA-F]{40})(-head)$`)
 
 func dashboardBuildLabel(version, stream string) string {
 	if stream != "prime-head" {
@@ -538,12 +538,12 @@ func dashboardBuildLabel(version, stream string) string {
 	if len(m) != 4 {
 		return version
 	}
-	return m[1] + m[2][:6] + m[3]
+	return m[1] + m[2][:7] + m[3]
 }
 
 var (
 	alphaTagRE         = regexp.MustCompile(`^v\d+\.\d+\.\d+-alpha\d+$`)
-	primeHeadTagRE     = regexp.MustCompile(`^v\d+\.\d+\.\d+-[0-9a-fA-F]{7,40}-head$`)
+	primeHeadTagRE     = regexp.MustCompile(`^v\d+\.\d+\.\d+-([0-9a-fA-F]{7}|[0-9a-fA-F]{40})-head$`)
 	communityHeadTagRE = regexp.MustCompile(`^v\d+\.\d+-[0-9a-fA-F]{7,40}-head$`)
 )
 
@@ -851,7 +851,7 @@ func renderDashboard(byLine map[string][]reportMeta) string {
 
 	var b strings.Builder
 	b.WriteString("## Latest per release line and stream\n\n")
-	b.WriteString("_Prime head labels use a six-character SHA on this page; open a report for the full tag and revision details._\n\n")
+	b.WriteString("_Prime head labels use a seven-character SHA on this page; open a report for the full tag and revision details._\n\n")
 	if len(lines) == 0 {
 		b.WriteString("_No reports yet._\n")
 	} else {

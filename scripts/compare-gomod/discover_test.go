@@ -34,10 +34,20 @@ func TestParseDiscoverTag(t *testing.T) {
 			name: "full uppercase prime SHA", tag: "v2.14.5-" + strings.ToUpper(fullSHA) + "-head", wantOK: true,
 			wantStream: discoverStreamPrimeHead, wantMajor: 2, wantMinor: 14, wantPatch: 5, wantSHA: strings.ToUpper(fullSHA),
 		},
+		{
+			name: "seven character prime SHA", tag: "v2.14.5-deadbee-head", wantOK: true,
+			wantStream: discoverStreamPrimeHead, wantMajor: 2, wantMinor: 14, wantPatch: 5, wantSHA: "deadbee",
+		},
+		{
+			name: "seven character uppercase prime SHA", tag: "v2.14.5-DEADBEE-head", wantOK: true,
+			wantStream: discoverStreamPrimeHead, wantMajor: 2, wantMinor: 14, wantPatch: 5, wantSHA: "DEADBEE",
+		},
 		{name: "literal patch placeholder", tag: "v2.14.z-" + fullSHA + "-head"},
-		{name: "short SHA", tag: "v2.14.5-deadbee-head"},
+		{name: "6 character SHA", tag: "v2.14.5-deadbe-head"},
+		{name: "8 character SHA", tag: "v2.14.5-deadbeef-head"},
 		{name: "39 character SHA", tag: "v2.14.5-" + strings.Repeat("a", 39) + "-head"},
 		{name: "41 character SHA", tag: "v2.14.5-" + strings.Repeat("a", 41) + "-head"},
+		{name: "non-hex short SHA", tag: "v2.14.5-deadbeg-head"},
 		{name: "non-hex SHA", tag: "v2.14.5-" + strings.Repeat("g", 40) + "-head"},
 		{name: "old minor SHA head", tag: "v2.14-" + fullSHA + "-head"},
 		{name: "rolling head", tag: "v2.14-head"},
@@ -118,26 +128,33 @@ func TestParseDiscoverImageConfig(t *testing.T) {
 
 func TestParseDiscoverImageConfigRejectsPrimeRevisionMismatch(t *testing.T) {
 	t.Parallel()
-	tagSHA := strings.Repeat("c", 40)
-	tag, ok := parseDiscoverTag("v2.15.1-" + tagSHA + "-head")
-	if !ok {
-		t.Fatal("test tag did not parse")
-	}
+	fullTagSHA := strings.Repeat("c", 40)
+	shortTagSHA := "c0ffee0"
+	shortRevision := shortTagSHA + strings.Repeat("d", 33)
 	now := time.Date(2026, 8, 19, 12, 0, 0, 0, time.UTC)
 
 	for _, tt := range []struct {
 		name          string
+		tagSHA        string
 		imageRevision string
 		ossRevision   string
 		env           []string
 		wantError     string
 	}{
-		{name: "missing OSS revision", imageRevision: tagSHA, env: []string{"RANCHER_VERSION_TYPE=prime"}, wantError: "has no org.opencontainers.image.oss.revision"},
-		{name: "OSS revision mismatch", imageRevision: tagSHA, ossRevision: strings.Repeat("e", 40), env: []string{"RANCHER_VERSION_TYPE=prime"}, wantError: "does not match OSS source revision"},
-		{name: "community metadata", imageRevision: "private", ossRevision: tagSHA, wantError: "not classified as Prime"},
+		{name: "missing OSS revision", tagSHA: fullTagSHA, imageRevision: fullTagSHA, env: []string{"RANCHER_VERSION_TYPE=prime"}, wantError: "has no org.opencontainers.image.oss.revision"},
+		{name: "full OSS revision mismatch", tagSHA: fullTagSHA, imageRevision: fullTagSHA, ossRevision: strings.Repeat("e", 40), env: []string{"RANCHER_VERSION_TYPE=prime"}, wantError: "does not match OSS source revision"},
+		{name: "short OSS revision mismatch", tagSHA: shortTagSHA, ossRevision: "badcafe" + strings.Repeat("d", 33), env: []string{"RANCHER_VERSION_TYPE=prime"}, wantError: "does not match OSS source revision"},
+		{name: "short label is not a full revision", tagSHA: shortTagSHA, ossRevision: shortTagSHA, env: []string{"RANCHER_VERSION_TYPE=prime"}, wantError: "does not match OSS source revision"},
+		{name: "39 character label is not a full revision", tagSHA: shortTagSHA, ossRevision: shortRevision[:39], env: []string{"RANCHER_VERSION_TYPE=prime"}, wantError: "does not match OSS source revision"},
+		{name: "non-hex full label", tagSHA: shortTagSHA, ossRevision: shortTagSHA + strings.Repeat("g", 33), env: []string{"RANCHER_VERSION_TYPE=prime"}, wantError: "does not match OSS source revision"},
+		{name: "community metadata", tagSHA: fullTagSHA, imageRevision: "private", ossRevision: fullTagSHA, wantError: "not classified as Prime"},
 	} {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+			tag, ok := parseDiscoverTag("v2.15.1-" + tt.tagSHA + "-head")
+			if !ok {
+				t.Fatal("test tag did not parse")
+			}
 			_, err := parseDiscoverImageConfig(
 				discoverConfigFixture(now, tt.imageRevision, tt.ossRevision, tt.env...),
 				tag, "example.test/rancher", 0,
@@ -146,6 +163,33 @@ func TestParseDiscoverImageConfigRejectsPrimeRevisionMismatch(t *testing.T) {
 				t.Fatalf("error = %v, want error containing %q", err, tt.wantError)
 			}
 		})
+	}
+}
+
+func TestParseDiscoverImageConfigAcceptsShortPrimeRevisionPrefix(t *testing.T) {
+	t.Parallel()
+	const tagSHA = "29C07AA"
+	fullRevision := strings.ToLower(tagSHA) + strings.Repeat("b", 33)
+	tag, ok := parseDiscoverTag("v2.15.1-" + tagSHA + "-head")
+	if !ok {
+		t.Fatal("test tag did not parse")
+	}
+	payload := discoverConfigFixture(
+		time.Date(2026, 8, 24, 12, 0, 0, 0, time.UTC),
+		"private-revision",
+		fullRevision,
+		"RANCHER_VERSION_TYPE=prime",
+	)
+
+	got, err := parseDiscoverImageConfig(payload, tag, "example.test/rancher", 0)
+	if err != nil {
+		t.Fatalf("parseDiscoverImageConfig() error = %v", err)
+	}
+	if got.SourceRevision != fullRevision {
+		t.Errorf("SourceRevision = %q, want full OSS revision %q", got.SourceRevision, fullRevision)
+	}
+	if got.Tag != "v2.15.1-"+tagSHA+"-head" {
+		t.Errorf("Tag = %q", got.Tag)
 	}
 }
 

@@ -36,7 +36,11 @@ func TestNormalizedBuildStream(t *testing.T) {
 		want    string
 	}{
 		{"v2.14.5-alpha1", "alpha"},
+		{"v2.15.1-29c07aa-head", "prime-head"},
 		{"v2.14.5-4d29026545cefa8ce9d8950d746c4fda80217942-head", "prime-head"},
+		{"v2.15.1-29c07a-head", "other"},
+		{"v2.15.1-29c07aa8-head", "other"},
+		{"v2.15.1-" + strings.Repeat("a", 39) + "-head", "other"},
 		{"v2.14-4d29026545cefa8ce9d8950d746c4fda80217942-head", "community-head"},
 		{"v2.14.5", "other"},
 	}
@@ -109,7 +113,7 @@ func TestDashboardKeepsLatestBuildPerStream(t *testing.T) {
 			t.Errorf("dashboard missing %q", want)
 		}
 	}
-	wantShortLink := "[`v2.14.5-4d2902-head`](reports/v2.14/" + fullHead + ".md)"
+	wantShortLink := "[`v2.14.5-4d29026-head`](reports/v2.14/" + fullHead + ".md)"
 	if got := strings.Count(body, wantShortLink); got != 2 {
 		t.Errorf("dashboard contains shortened Prime head link %d times, want 2 (latest and recent):\n%s", got, body)
 	}
@@ -120,7 +124,7 @@ func TestDashboardKeepsLatestBuildPerStream(t *testing.T) {
 	if strings.Contains(body, "[`"+fullHead+"`]") || strings.Contains(body, "`"+fullHead+"` |") {
 		t.Fatalf("dashboard displays the full Prime head tag:\n%s", body)
 	}
-	if !strings.Contains(body, "six-character SHA") {
+	if !strings.Contains(body, "seven-character SHA") {
 		t.Fatalf("dashboard is missing the SHA abbreviation note:\n%s", body)
 	}
 }
@@ -162,9 +166,11 @@ func TestDashboardBuildLabelOnlyShortensFullPrimeHeadSHA(t *testing.T) {
 		stream  string
 		want    string
 	}{
-		{"v2.14.5-4d29026545cefa8ce9d8950d746c4fda80217942-head", "prime-head", "v2.14.5-4d2902-head"},
+		{"v2.14.5-4d29026545cefa8ce9d8950d746c4fda80217942-head", "prime-head", "v2.14.5-4d29026-head"},
 		{"v2.14.5-alpha1", "alpha", "v2.14.5-alpha1"},
 		{"v2.14.5-4d29026-head", "prime-head", "v2.14.5-4d29026-head"},
+		{"v2.14.5-4d290265-head", "prime-head", "v2.14.5-4d290265-head"},
+		{"v2.14.5-" + strings.Repeat("a", 39) + "-head", "prime-head", "v2.14.5-" + strings.Repeat("a", 39) + "-head"},
 		{"v2.14.5-4d29026545cefa8ce9d8950d746c4fda80217942-head", "other", "v2.14.5-4d29026545cefa8ce9d8950d746c4fda80217942-head"},
 	}
 	for _, tt := range tests {

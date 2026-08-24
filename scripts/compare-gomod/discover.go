@@ -39,9 +39,10 @@ var discoverDefaultImages = []string{
 
 var (
 	discoverAlphaTagRE = regexp.MustCompile(`^v([0-9]+)\.([0-9]+)\.([0-9]+)-alpha([0-9]+)$`)
-	// Prime head tags name an exact source commit. Require the complete SHA so
-	// the tag can be checked for equality with the effective source revision.
-	discoverPrimeHeadTagRE = regexp.MustCompile(`^v([0-9]+)\.([0-9]+)\.([0-9]+)-([0-9a-fA-F]{40})-head$`)
+	// Prime head tags use the current seven-character SHA or the legacy full
+	// SHA. Other abbreviation lengths are deliberately not accepted.
+	discoverPrimeHeadTagRE = regexp.MustCompile(`^v([0-9]+)\.([0-9]+)\.([0-9]+)-([0-9a-fA-F]{7}|[0-9a-fA-F]{40})-head$`)
+	discoverFullSHA        = regexp.MustCompile(`^[0-9a-fA-F]{40}$`)
 )
 
 // skopeoRunner is deliberately small so discovery can be tested without a
@@ -516,7 +517,12 @@ func parseDiscoverImageConfig(payload []byte, tag discoverTag, image string, sou
 		if flavor != discoverFlavorPrime {
 			return discoverCandidate{}, errors.New("Prime-head image is not classified as Prime")
 		}
-		if !strings.EqualFold(tag.sha, ossRevision) {
+		matchesRevision := strings.EqualFold(tag.sha, ossRevision)
+		if len(tag.sha) == 7 {
+			matchesRevision = discoverFullSHA.MatchString(ossRevision) &&
+				strings.EqualFold(tag.sha, ossRevision[:7])
+		}
+		if !matchesRevision {
 			return discoverCandidate{}, fmt.Errorf(
 				"tag SHA %s does not match OSS source revision %q", tag.sha, ossRevision)
 		}

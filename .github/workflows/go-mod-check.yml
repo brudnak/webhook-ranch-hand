@@ -129,8 +129,9 @@ jobs:
             local image_sources="$RANCHER_IMAGE_SOURCES"
 
             # Patch-qualified SHA heads are Prime-only and must never silently
-            # fall back to a similarly named Community image.
-            if [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-[0-9a-f]{40}-head$ ]]; then
+            # fall back to a similarly named Community image. New builds use a
+            # seven-character SHA; legacy builds retain the full 40 characters.
+            if [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-([0-9a-fA-F]{7}|[0-9a-fA-F]{40})-head$ ]]; then
               image_sources="$RANCHER_PRIME_IMAGE_SOURCE"
             fi
 
@@ -139,7 +140,7 @@ jobs:
                 jq -r --arg source "$image" --arg tag "$tag" '
                   (.config.Labels // {}) as $labels
                   | ([(.config.Env // [])[]? | select(startswith("RANCHER_VERSION_TYPE=")) | sub("^RANCHER_VERSION_TYPE="; "")] | first // "") as $version_type
-                  | ($tag | test("^v[0-9]+\\.[0-9]+\\.[0-9]+-[0-9a-f]{40}-head$")) as $is_prime_head
+                  | ($tag | test("^v[0-9]+\\.[0-9]+\\.[0-9]+-([0-9a-fA-F]{7}|[0-9a-fA-F]{40})-head$")) as $is_prime_head
                   | (($version_type | ascii_downcase) == "prime" or (($labels["org.opencontainers.image.source"] // "") | ascii_downcase | contains("rancher-prime"))) as $is_prime
                   | [
                     $tag,
@@ -231,7 +232,7 @@ jobs:
 
             # Download rancher source and extract go.mod + webhook version pin.
             RANCHER_SOURCE_REF="${RANCHER_SOURCE_REVISION:-$VERSION}"
-            if [[ "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-([0-9a-f]{40})-head$ ]]; then
+            if [[ "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-([0-9a-fA-F]{7}|[0-9a-fA-F]{40})-head$ ]]; then
               TAG_SOURCE_REVISION="${BASH_REMATCH[1]}"
               if [ "${BUILD_FLAVOR:-}" != "prime" ]; then
                 echo "::error::$VERSION: patch-qualified head did not resolve to a Prime image"
@@ -239,8 +240,11 @@ jobs:
                 echo "::endgroup::"
                 continue
               fi
-              if [ -z "${RANCHER_SOURCE_REVISION:-}" ] || [ "$TAG_SOURCE_REVISION" != "$RANCHER_SOURCE_REVISION" ]; then
-                echo "::error::$VERSION: embedded SHA does not match org.opencontainers.image.oss.revision (${RANCHER_SOURCE_REVISION:-missing})"
+              TAG_SOURCE_REVISION=$(printf '%s' "$TAG_SOURCE_REVISION" | tr '[:upper:]' '[:lower:]')
+              RANCHER_SOURCE_REVISION_LOWER=$(printf '%s' "${RANCHER_SOURCE_REVISION:-}" | tr '[:upper:]' '[:lower:]')
+              if [[ ! "$RANCHER_SOURCE_REVISION_LOWER" =~ ^[0-9a-f]{40}$ ]] ||
+                 [[ "$RANCHER_SOURCE_REVISION_LOWER" != "$TAG_SOURCE_REVISION"* ]]; then
+                echo "::error::$VERSION: embedded SHA is not a prefix of org.opencontainers.image.oss.revision (${RANCHER_SOURCE_REVISION:-missing})"
                 echo "$VERSION" >> /tmp/failed.txt
                 echo "::endgroup::"
                 continue
