@@ -2,10 +2,11 @@
 
 # v2.14 reports
 
-25 report(s) for release line v2.14.
+26 report(s) for release line v2.14.
 
 | Build | Stream | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `v2.14.6-d668af0-head` | `prime-head` | 2026-08-29 | Image built | ✅ Clean | `v0.10.10` | 2026-08-25 | 2026-08-29 | [open](v2.14.6-d668af0-head.md) |
 | `v2.14.6-b18f4aa-head` | `prime-head` | 2026-08-28 | Image built | ✅ Clean | `v0.10.10` | 2026-08-25 | 2026-08-28 | [open](v2.14.6-b18f4aa-head.md) |
 | `v2.14.6-5e3a5b1-head` | `prime-head` | 2026-08-28 | Image built | ✅ Clean | `v0.10.10` | 2026-08-25 | 2026-08-28 | [open](v2.14.6-5e3a5b1-head.md) |
 | `v2.14.5-63d8501-head` | `prime-head` | 2026-08-26 | Image built | ✅ Clean | `v0.10.10` | 2026-08-25 | 2026-08-26 | [open](v2.14.5-63d8501-head.md) |
