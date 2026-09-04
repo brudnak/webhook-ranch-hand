@@ -12,7 +12,7 @@ _Prime head labels use a seven-character SHA on this page; open a report for the
 
 | Line | Stream | Latest build | Status | Webhook | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- |
-| v2.16 | `prime-head` | [`v2.16.0-83a7758-head`](reports/v2.16/v2.16.0-83a7758-head.md) | ⚠️ 4 mismatches | `v0.12.1-rc.3` | 2026-09-03 | [open](reports/v2.16/v2.16.0-83a7758-head.md) |
+| v2.16 | `prime-head` | [`v2.16.0-3243a1d-head`](reports/v2.16/v2.16.0-3243a1d-head.md) | ⚠️ 4 mismatches | `v0.12.1-rc.3` | 2026-09-04 | [open](reports/v2.16/v2.16.0-3243a1d-head.md) |
 | v2.15 | `prime-head` | [`v2.15.2-00fa53d-head`](reports/v2.15/v2.15.2-00fa53d-head.md) | ⚠️ 2 mismatches | `v0.11.1` | 2026-09-03 | [open](reports/v2.15/v2.15.2-00fa53d-head.md) |
 | v2.15 | `alpha` | [`v2.15.1-alpha1`](reports/v2.15/v2.15.1-alpha1.md) | ⚠️ 7 mismatches | `v0.11.1-rc.1` | 2026-08-19 | [open](reports/v2.15/v2.15.1-alpha1.md) |
 | v2.14 | `prime-head` | [`v2.14.6-4fc40bd-head`](reports/v2.14/v2.14.6-4fc40bd-head.md) | ✅ Clean | `v0.10.10` | 2026-09-03 | [open](reports/v2.14/v2.14.6-4fc40bd-head.md) |
@@ -27,6 +27,7 @@ _Prime head labels use a seven-character SHA on this page; open a report for the
 
 ## Recent runs
 
+- 2026-09-04 · `prime-head` · [`v2.16.0-3243a1d-head`](reports/v2.16/v2.16.0-3243a1d-head.md) · ⚠️ 4 mismatches
 - 2026-09-03 · `prime-head` · [`v2.16.0-83a7758-head`](reports/v2.16/v2.16.0-83a7758-head.md) · ⚠️ 4 mismatches
 - 2026-09-03 · `prime-head` · [`v2.15.2-00fa53d-head`](reports/v2.15/v2.15.2-00fa53d-head.md) · ⚠️ 2 mismatches
 - 2026-09-03 · `prime-head` · [`v2.14.6-4fc40bd-head`](reports/v2.14/v2.14.6-4fc40bd-head.md) · ✅ Clean
@@ -36,7 +37,6 @@ _Prime head labels use a seven-character SHA on this page; open a report for the
 - 2026-09-02 · `prime-head` · [`v2.15.2-653b4c7-head`](reports/v2.15/v2.15.2-653b4c7-head.md) · ⚠️ 2 mismatches
 - 2026-09-02 · `prime-head` · [`v2.16.0-69212c2-head`](reports/v2.16/v2.16.0-69212c2-head.md) · ⚠️ 4 mismatches
 - 2026-09-02 · `prime-head` · [`v2.13.10-f2dea77-head`](reports/v2.13/v2.13.10-f2dea77-head.md) · ✅ Clean
-- 2026-09-01 · `prime-head` · [`v2.14.6-79ae999-head`](reports/v2.14/v2.14.6-79ae999-head.md) · ✅ Clean
 
 
 <!-- AUTO:DASHBOARD:END -->
