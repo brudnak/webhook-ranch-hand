@@ -2,10 +2,11 @@
 
 # v2.15 reports
 
-58 report(s) for release line v2.15.
+59 report(s) for release line v2.15.
 
 | Build | Stream | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `v2.15.3-175b266-head` | `prime-head` | 2026-10-10 | Image built | ⚠️ 4 mismatches | `v0.11.4-rc.1` | - | 2026-10-10 | [open](v2.15.3-175b266-head.md) |
 | `v2.15.3-89efee0-head` | `prime-head` | 2026-10-09 | Image built | ⚠️ 4 mismatches | `v0.11.3` | 2026-09-21 | 2026-10-09 | [open](v2.15.3-89efee0-head.md) |
 | `v2.15.3-e5c8c57-head` | `prime-head` | 2026-10-08 | Image built | ⚠️ 4 mismatches | `v0.11.3` | 2026-09-21 | 2026-10-08 | [open](v2.15.3-e5c8c57-head.md) |
 | `v2.15.3-a4cfebb-head` | `prime-head` | 2026-10-08 | Image built | ⚠️ 4 mismatches | `v0.11.3` | 2026-09-21 | 2026-10-08 | [open](v2.15.3-a4cfebb-head.md) |
