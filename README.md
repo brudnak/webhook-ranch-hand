@@ -6,24 +6,31 @@ The scheduled action runs three times a day (02, 10, 18 UTC). For each active `v
 
 <!-- AUTO:DASHBOARD:START -->
 
-## Latest per release line and stream
+## Latest builds
+
+### Prime heads
 
 _Prime head labels use a seven-character SHA on this page; open a report for the full tag and revision details._
 
-| Line | Stream | Latest build | Status | Webhook | Checked | Report |
-| --- | --- | --- | --- | --- | --- | --- |
-| v2.16 | `prime-head` | [`v2.16.0-696a3c6-head`](reports/v2.16/v2.16.0-696a3c6-head.md) | ⚠️ 3 mismatches | `v0.12.1-rc.12` | 2026-10-20 | [open](reports/v2.16/v2.16.0-696a3c6-head.md) |
-| v2.15 | `prime-head` | [`v2.15.3-8f2298f-head`](reports/v2.15/v2.15.3-8f2298f-head.md) | ⚠️ 7 mismatches | `v0.11.4-rc.1` | 2026-10-20 | [open](reports/v2.15/v2.15.3-8f2298f-head.md) |
-| v2.15 | `alpha` | [`v2.15.3-alpha1`](reports/v2.15/v2.15.3-alpha1.md) | ⚠️ 7 mismatches | `v0.11.4-rc.1` | 2026-10-16 | [open](reports/v2.15/v2.15.3-alpha1.md) |
-| v2.14 | `prime-head` | [`v2.14.7-83faa18-head`](reports/v2.14/v2.14.7-83faa18-head.md) | ⚠️ 5 mismatches | `v0.10.13-rc.1` | 2026-10-20 | [open](reports/v2.14/v2.14.7-83faa18-head.md) |
-| v2.14 | `alpha` | [`v2.14.7-alpha1`](reports/v2.14/v2.14.7-alpha1.md) | ⚠️ 4 mismatches | `v0.10.13-rc.1` | 2026-10-16 | [open](reports/v2.14/v2.14.7-alpha1.md) |
-| v2.13 | `prime-head` | [`v2.13.11-701d447-head`](reports/v2.13/v2.13.11-701d447-head.md) | ⚠️ 4 mismatches | `v0.9.11-rc.1` | 2026-10-17 | [open](reports/v2.13/v2.13.11-701d447-head.md) |
-| v2.13 | `alpha` | [`v2.13.11-alpha1`](reports/v2.13/v2.13.11-alpha1.md) | ⚠️ 4 mismatches | `v0.9.11-rc.1` | 2026-10-16 | [open](reports/v2.13/v2.13.11-alpha1.md) |
-| v2.12 | `prime-head` | [`v2.12.15-da3e07a-head`](reports/v2.12/v2.12.15-da3e07a-head.md) | ⚠️ 3 mismatches | `v0.8.12-rc.1` | 2026-10-17 | [open](reports/v2.12/v2.12.15-da3e07a-head.md) |
-| v2.12 | `alpha` | [`v2.12.15-alpha1`](reports/v2.12/v2.12.15-alpha1.md) | ✅ Clean | `v0.8.12-rc.1` | 2026-10-15 | [open](reports/v2.12/v2.12.15-alpha1.md) |
-| v2.11 | `prime-head` | [`v2.11.19-801faa1-head`](reports/v2.11/v2.11.19-801faa1-head.md) | ⚠️ 1 mismatch | `v0.7.12` | 2026-10-13 | [open](reports/v2.11/v2.11.19-801faa1-head.md) |
-| v2.11 | `alpha` | [`v2.11.17-alpha1`](reports/v2.11/v2.11.17-alpha1.md) | ⚠️ 5 mismatches | `v0.7.10` | 2026-08-19 | [open](reports/v2.11/v2.11.17-alpha1.md) |
-| v2.10 | `alpha` | [`v2.10.12-alpha1`](reports/v2.10/v2.10.12-alpha1.md) | ⚠️ 1 mismatch | `v0.6.12` | 2026-05-22 | [open](reports/v2.10/v2.10.12-alpha1.md) |
+| Line | Latest build | Status | Webhook | Checked | Report |
+| --- | --- | --- | --- | --- | --- |
+| v2.16 | [`v2.16.0-696a3c6-head`](reports/v2.16/v2.16.0-696a3c6-head.md) | ⚠️ 3 mismatches | `v0.12.1-rc.12` | 2026-10-20 | [open](reports/v2.16/v2.16.0-696a3c6-head.md) |
+| v2.15 | [`v2.15.3-8f2298f-head`](reports/v2.15/v2.15.3-8f2298f-head.md) | ⚠️ 7 mismatches | `v0.11.4-rc.1` | 2026-10-20 | [open](reports/v2.15/v2.15.3-8f2298f-head.md) |
+| v2.14 | [`v2.14.7-83faa18-head`](reports/v2.14/v2.14.7-83faa18-head.md) | ⚠️ 5 mismatches | `v0.10.13-rc.1` | 2026-10-20 | [open](reports/v2.14/v2.14.7-83faa18-head.md) |
+| v2.13 | [`v2.13.11-701d447-head`](reports/v2.13/v2.13.11-701d447-head.md) | ⚠️ 4 mismatches | `v0.9.11-rc.1` | 2026-10-17 | [open](reports/v2.13/v2.13.11-701d447-head.md) |
+| v2.12 | [`v2.12.15-da3e07a-head`](reports/v2.12/v2.12.15-da3e07a-head.md) | ⚠️ 3 mismatches | `v0.8.12-rc.1` | 2026-10-17 | [open](reports/v2.12/v2.12.15-da3e07a-head.md) |
+| v2.11 | [`v2.11.19-801faa1-head`](reports/v2.11/v2.11.19-801faa1-head.md) | ⚠️ 1 mismatch | `v0.7.12` | 2026-10-13 | [open](reports/v2.11/v2.11.19-801faa1-head.md) |
+
+### Alphas
+
+| Line | Latest build | Status | Webhook | Checked | Report |
+| --- | --- | --- | --- | --- | --- |
+| v2.15 | [`v2.15.3-alpha1`](reports/v2.15/v2.15.3-alpha1.md) | ⚠️ 7 mismatches | `v0.11.4-rc.1` | 2026-10-16 | [open](reports/v2.15/v2.15.3-alpha1.md) |
+| v2.14 | [`v2.14.7-alpha1`](reports/v2.14/v2.14.7-alpha1.md) | ⚠️ 4 mismatches | `v0.10.13-rc.1` | 2026-10-16 | [open](reports/v2.14/v2.14.7-alpha1.md) |
+| v2.13 | [`v2.13.11-alpha1`](reports/v2.13/v2.13.11-alpha1.md) | ⚠️ 4 mismatches | `v0.9.11-rc.1` | 2026-10-16 | [open](reports/v2.13/v2.13.11-alpha1.md) |
+| v2.12 | [`v2.12.15-alpha1`](reports/v2.12/v2.12.15-alpha1.md) | ✅ Clean | `v0.8.12-rc.1` | 2026-10-15 | [open](reports/v2.12/v2.12.15-alpha1.md) |
+| v2.11 | [`v2.11.17-alpha1`](reports/v2.11/v2.11.17-alpha1.md) | ⚠️ 5 mismatches | `v0.7.10` | 2026-08-19 | [open](reports/v2.11/v2.11.17-alpha1.md) |
+| v2.10 | [`v2.10.12-alpha1`](reports/v2.10/v2.10.12-alpha1.md) | ⚠️ 1 mismatch | `v0.6.12` | 2026-05-22 | [open](reports/v2.10/v2.10.12-alpha1.md) |
 
 ## Recent runs
 
@@ -60,7 +67,7 @@ Need a one-off check (for example an RC, an older alpha, or an immutable SHA-qua
 2. **Resolve source.** Community images identify the public Rancher commit with `org.opencontainers.image.revision`. Prime images have a separate wrapper revision, so Ranch Hand uses `org.opencontainers.image.oss.revision` for the public [`rancher/rancher`](https://github.com/rancher/rancher) source and records both revisions. The SHA embedded in a Prime head tag must match the corresponding prefix of that full OSS revision (legacy 40-character tags match it in full).
 3. **Process.** For each candidate, the action downloads the resolved public Rancher commit and reads the webhook pin from its `build.yaml`, then runs [`scripts/compare-gomod`](scripts/compare-gomod) against both `go.mod` files. `build.yaml` remains the source of truth because Prime image environments may omit the webhook pin.
 4. **Classify.** `replace` directives are applied so the comparison is against *effective* versions, not raw `require` pins. `pkg/apis` and `pkg/client` drift is expected (rancher replaces them locally) and is filtered out of the mismatch count.
-5. **Index.** After every run, the dashboard table above and the per-line index pages in [`reports/`](reports/) are regenerated from the on-disk reports. Alpha and Prime head streams remain separate. Nothing else in this README is touched.
+5. **Index.** After every run, the dashboard tables above and the per-line index pages in [`reports/`](reports/) are regenerated from the on-disk reports. Alpha and Prime head streams remain separate. Nothing else in this README is touched.
 
 ## Archive
 

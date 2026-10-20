@@ -838,8 +838,12 @@ func updateDashboard(readmePath string, byLine map[string][]reportMeta) error {
 
 func renderDashboard(byLine map[string][]reportMeta) string {
 	lines := make([]string, 0, len(byLine))
+	sortedByLine := make(map[string][]reportMeta, len(byLine))
 	for l := range byLine {
 		lines = append(lines, l)
+		reports := append([]reportMeta(nil), byLine[l]...)
+		sortReports(reports)
+		sortedByLine[l] = reports
 	}
 	sort.Slice(lines, func(i, j int) bool { return versionLess(lines[j], lines[i]) })
 
@@ -850,41 +854,14 @@ func renderDashboard(byLine map[string][]reportMeta) string {
 	sortReports(all)
 
 	var b strings.Builder
-	b.WriteString("## Latest per release line and stream\n\n")
+	b.WriteString("## Latest builds\n\n")
+	b.WriteString("### Prime heads\n\n")
 	b.WriteString("_Prime head labels use a seven-character SHA on this page; open a report for the full tag and revision details._\n\n")
-	if len(lines) == 0 {
-		b.WriteString("_No reports yet._\n")
-	} else {
-		b.WriteString("| Line | Stream | Latest build | Status | Webhook | Checked | Report |\n")
-		b.WriteString("| --- | --- | --- | --- | --- | --- | --- |\n")
-		for _, l := range lines {
-			rs := byLine[l]
-			if len(rs) == 0 {
-				continue
-			}
-			seenStreams := map[string]bool{}
-			for _, latest := range rs {
-				if seenStreams[latest.buildStream] {
-					continue
-				}
-				seenStreams[latest.buildStream] = true
-				webhookCell := "-"
-				if latest.webhook != "" {
-					webhookCell = "`" + latest.webhook + "`"
-				}
-				fmt.Fprintf(&b, "| %s | `%s` | [`%s`](reports/%s) | %s | %s | %s | [open](reports/%s) |\n",
-					l,
-					latest.buildStream,
-					dashboardBuildLabel(latest.version, latest.buildStream),
-					latest.relPath,
-					latest.status(),
-					webhookCell,
-					fmtDateShort(latest.generated),
-					latest.relPath)
-			}
-		}
-		b.WriteString("\n")
-	}
+	renderLatestDashboardTable(&b, lines, sortedByLine, "prime-head", "Prime head")
+
+	b.WriteString("### Alphas\n\n")
+	renderLatestDashboardTable(&b, lines, sortedByLine, "alpha", "alpha")
+	renderOtherDashboardTable(&b, lines, sortedByLine)
 
 	if len(all) > 0 {
 		b.WriteString("## Recent runs\n\n")
@@ -903,6 +880,89 @@ func renderDashboard(byLine map[string][]reportMeta) string {
 	}
 
 	return b.String()
+}
+
+type dashboardLatestRow struct {
+	line   string
+	report reportMeta
+}
+
+func latestDashboardRows(lines []string, byLine map[string][]reportMeta, stream string) []dashboardLatestRow {
+	var rows []dashboardLatestRow
+	for _, line := range lines {
+		for _, report := range byLine[line] {
+			if report.buildStream == stream {
+				rows = append(rows, dashboardLatestRow{line: line, report: report})
+				break
+			}
+		}
+	}
+	return rows
+}
+
+func renderLatestDashboardTable(b *strings.Builder, lines []string, byLine map[string][]reportMeta, stream, emptyLabel string) {
+	rows := latestDashboardRows(lines, byLine, stream)
+	if len(rows) == 0 {
+		fmt.Fprintf(b, "_No %s reports yet._\n\n", emptyLabel)
+		return
+	}
+
+	b.WriteString("| Line | Latest build | Status | Webhook | Checked | Report |\n")
+	b.WriteString("| --- | --- | --- | --- | --- | --- |\n")
+	for _, row := range rows {
+		latest := row.report
+		webhookCell := "-"
+		if latest.webhook != "" {
+			webhookCell = "`" + latest.webhook + "`"
+		}
+		fmt.Fprintf(b, "| %s | [`%s`](reports/%s) | %s | %s | %s | [open](reports/%s) |\n",
+			row.line,
+			dashboardBuildLabel(latest.version, latest.buildStream),
+			latest.relPath,
+			latest.status(),
+			webhookCell,
+			fmtDateShort(latest.generated),
+			latest.relPath)
+	}
+	b.WriteString("\n")
+}
+
+func renderOtherDashboardTable(b *strings.Builder, lines []string, byLine map[string][]reportMeta) {
+	var rows []dashboardLatestRow
+	for _, line := range lines {
+		seenStreams := map[string]bool{}
+		for _, report := range byLine[line] {
+			if report.buildStream == "prime-head" || report.buildStream == "alpha" || seenStreams[report.buildStream] {
+				continue
+			}
+			seenStreams[report.buildStream] = true
+			rows = append(rows, dashboardLatestRow{line: line, report: report})
+		}
+	}
+	if len(rows) == 0 {
+		return
+	}
+
+	b.WriteString("### Other streams\n\n")
+	b.WriteString("| Line | Stream | Latest build | Status | Webhook | Checked | Report |\n")
+	b.WriteString("| --- | --- | --- | --- | --- | --- | --- |\n")
+	for _, row := range rows {
+		latest := row.report
+		webhookCell := "-"
+		if latest.webhook != "" {
+			webhookCell = "`" + latest.webhook + "`"
+		}
+		fmt.Fprintf(b, "| %s | `%s` | [`%s`](reports/%s) | %s | %s | %s | [open](reports/%s) |\n",
+			row.line,
+			latest.buildStream,
+			dashboardBuildLabel(latest.version, latest.buildStream),
+			latest.relPath,
+			latest.status(),
+			webhookCell,
+			fmtDateShort(latest.generated),
+			latest.relPath)
+	}
+	b.WriteString("\n")
 }
 
 func sortReports(reports []reportMeta) {

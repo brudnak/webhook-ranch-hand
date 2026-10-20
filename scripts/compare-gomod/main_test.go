@@ -92,7 +92,7 @@ func TestRenderReportUsesOSSRefAndKeepsImageRevision(t *testing.T) {
 	}
 }
 
-func TestDashboardKeepsLatestBuildPerStream(t *testing.T) {
+func TestDashboardSplitsLatestBuildsByStream(t *testing.T) {
 	t.Parallel()
 
 	alpha := reportMeta{
@@ -104,14 +104,42 @@ func TestDashboardKeepsLatestBuildPerStream(t *testing.T) {
 		version: fullHead, line: "v2.14", buildStream: "prime-head",
 		rancherDate: time.Date(2026, 8, 19, 14, 0, 0, 0, time.UTC), relPath: "v2.14/" + fullHead + ".md",
 	}
-	body := renderDashboard(map[string][]reportMeta{"v2.14": {head, alpha}})
-	if strings.Count(body, "| v2.14 |") != 2 {
-		t.Fatalf("dashboard should contain one row per stream:\n%s", body)
+	olderHead := reportMeta{
+		version: "v2.14.5-1111111-head", line: "v2.14", buildStream: "prime-head",
+		rancherDate: time.Date(2026, 8, 18, 14, 0, 0, 0, time.UTC), relPath: "v2.14/v2.14.5-1111111-head.md",
 	}
-	for _, want := range []string{"`alpha`", "`prime-head`", "Latest per release line and stream"} {
-		if !strings.Contains(body, want) {
-			t.Errorf("dashboard missing %q", want)
-		}
+	head16 := reportMeta{
+		version: "v2.16.0-29c07aa-head", line: "v2.16", buildStream: "prime-head",
+		rancherDate: time.Date(2026, 8, 20, 14, 0, 0, 0, time.UTC), relPath: "v2.16/v2.16.0-29c07aa-head.md",
+	}
+	body := renderDashboard(map[string][]reportMeta{
+		"v2.14": {olderHead, alpha, head}, // Deliberately unsorted to exercise renderer sorting.
+		"v2.16": {head16},
+	})
+	if !strings.Contains(body, "## Latest builds") {
+		t.Fatalf("dashboard is missing latest-builds heading:\n%s", body)
+	}
+	_, afterPrime, ok := strings.Cut(body, "### Prime heads\n")
+	if !ok {
+		t.Fatalf("dashboard is missing Prime heads section:\n%s", body)
+	}
+	primeSection, afterPrime, ok := strings.Cut(afterPrime, "### Alphas\n")
+	if !ok {
+		t.Fatalf("dashboard is missing Alphas section:\n%s", body)
+	}
+	alphaSection, _, _ := strings.Cut(afterPrime, "## Recent runs")
+
+	if strings.Contains(primeSection, "alpha1") || !strings.Contains(primeSection, fullHead) || !strings.Contains(primeSection, head16.relPath) {
+		t.Fatalf("Prime heads table is not isolated to Prime builds:\n%s", primeSection)
+	}
+	if strings.Contains(primeSection, olderHead.relPath) {
+		t.Fatalf("Prime heads table includes an older build from the same release line:\n%s", primeSection)
+	}
+	if strings.Contains(alphaSection, "-head") || !strings.Contains(alphaSection, alpha.relPath) {
+		t.Fatalf("Alphas table is not isolated to alpha builds:\n%s", alphaSection)
+	}
+	if strings.Index(primeSection, "| v2.16 |") > strings.Index(primeSection, "| v2.14 |") {
+		t.Fatalf("Prime release lines are not newest-first:\n%s", primeSection)
 	}
 	wantShortLink := "[`v2.14.5-4d29026-head`](reports/v2.14/" + fullHead + ".md)"
 	if got := strings.Count(body, wantShortLink); got != 2 {
@@ -141,12 +169,19 @@ func TestDashboardUsesCompactColumns(t *testing.T) {
 		generated:        time.Date(2026, 8, 19, 0, 0, 0, 0, time.UTC),
 		relPath:          "v2.14/v2.14.5-alpha1.md",
 	}
-	body := renderDashboard(map[string][]reportMeta{"v2.14": {report}})
+	head := reportMeta{
+		version: "v2.14.5-29c07aa-head", line: "v2.14", buildStream: "prime-head",
+		generated: time.Date(2026, 8, 20, 0, 0, 0, 0, time.UTC), relPath: "v2.14/v2.14.5-29c07aa-head.md",
+	}
+	body := renderDashboard(map[string][]reportMeta{"v2.14": {report, head}})
 	latestSection, _, _ := strings.Cut(body, "## Recent runs")
 
-	wantHeader := "| Line | Stream | Latest build | Status | Webhook | Checked | Report |"
-	if !strings.Contains(latestSection, wantHeader) {
-		t.Fatalf("dashboard header missing %q:\n%s", wantHeader, latestSection)
+	wantHeader := "| Line | Latest build | Status | Webhook | Checked | Report |"
+	if got := strings.Count(latestSection, wantHeader); got != 2 {
+		t.Fatalf("dashboard contains compact header %d times, want 2:\n%s", got, latestSection)
+	}
+	if strings.Contains(latestSection, "| Line | Stream |") {
+		t.Fatalf("stream column is redundant in split latest tables:\n%s", latestSection)
 	}
 	for _, unwanted := range []string{"Rancher date", "Webhook date", "Source", "2026-08-17", "2026-08-18"} {
 		if strings.Contains(latestSection, unwanted) {
@@ -155,6 +190,59 @@ func TestDashboardUsesCompactColumns(t *testing.T) {
 	}
 	if !strings.Contains(latestSection, "2026-08-19") {
 		t.Errorf("latest dashboard section is missing the checked date:\n%s", latestSection)
+	}
+}
+
+func TestDashboardLatestTableEmptyStates(t *testing.T) {
+	t.Parallel()
+
+	alpha := reportMeta{
+		version: "v2.14.5-alpha1", line: "v2.14", buildStream: "alpha",
+		generated: time.Date(2026, 8, 19, 0, 0, 0, 0, time.UTC), relPath: "v2.14/v2.14.5-alpha1.md",
+	}
+	head := reportMeta{
+		version: "v2.14.5-29c07aa-head", line: "v2.14", buildStream: "prime-head",
+		generated: time.Date(2026, 8, 20, 0, 0, 0, 0, time.UTC), relPath: "v2.14/v2.14.5-29c07aa-head.md",
+	}
+	tests := []struct {
+		name           string
+		byLine         map[string][]reportMeta
+		wantPrimeEmpty bool
+		wantAlphaEmpty bool
+		wantRecent     bool
+	}{
+		{name: "no reports", byLine: nil, wantPrimeEmpty: true, wantAlphaEmpty: true},
+		{name: "alpha only", byLine: map[string][]reportMeta{"v2.14": {alpha}}, wantPrimeEmpty: true, wantRecent: true},
+		{name: "Prime only", byLine: map[string][]reportMeta{"v2.14": {head}}, wantAlphaEmpty: true, wantRecent: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			body := renderDashboard(tt.byLine)
+			if got := strings.Contains(body, "_No Prime head reports yet._"); got != tt.wantPrimeEmpty {
+				t.Errorf("Prime empty state = %v, want %v:\n%s", got, tt.wantPrimeEmpty, body)
+			}
+			if got := strings.Contains(body, "_No alpha reports yet._"); got != tt.wantAlphaEmpty {
+				t.Errorf("alpha empty state = %v, want %v:\n%s", got, tt.wantAlphaEmpty, body)
+			}
+			if got := strings.Contains(body, "## Recent runs"); got != tt.wantRecent {
+				t.Errorf("Recent runs presence = %v, want %v:\n%s", got, tt.wantRecent, body)
+			}
+		})
+	}
+}
+
+func TestDashboardPreservesOtherStreams(t *testing.T) {
+	t.Parallel()
+
+	rc := reportMeta{
+		version: "v2.14.5-rc1", line: "v2.14", buildStream: "other",
+		generated: time.Date(2026, 8, 20, 0, 0, 0, 0, time.UTC), relPath: "v2.14/v2.14.5-rc1.md",
+	}
+	body := renderDashboard(map[string][]reportMeta{"v2.14": {rc}})
+	_, otherSection, ok := strings.Cut(body, "### Other streams\n")
+	if !ok || !strings.Contains(otherSection, "| v2.14 | `other` |") || !strings.Contains(otherSection, rc.relPath) {
+		t.Fatalf("dashboard dropped latest non-alpha/non-Prime stream:\n%s", body)
 	}
 }
 
