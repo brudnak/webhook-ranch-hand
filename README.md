@@ -14,12 +14,12 @@ _Prime head labels use a seven-character SHA on this page; open a report for the
 
 | Line | Latest build | Status | Webhook | Checked | Report |
 | --- | --- | --- | --- | --- | --- |
-| v2.16 | [`v2.16.0-729b5db-head`](reports/v2.16/v2.16.0-729b5db-head.md) | ⚠️ 4 mismatches | `v0.12.1-rc.12` | 2026-10-27 | [open](reports/v2.16/v2.16.0-729b5db-head.md) |
-| v2.15 | [`v2.15.3-5eb027d-head`](reports/v2.15/v2.15.3-5eb027d-head.md) | ⚠️ 2 mismatches | `v0.11.4-rc.6` | 2026-10-27 | [open](reports/v2.15/v2.15.3-5eb027d-head.md) |
-| v2.14 | [`v2.14.7-dea4684-head`](reports/v2.14/v2.14.7-dea4684-head.md) | ✅ Clean | `v0.10.13-rc.3` | 2026-10-27 | [open](reports/v2.14/v2.14.7-dea4684-head.md) |
-| v2.13 | [`v2.13.11-aaf81db-head`](reports/v2.13/v2.13.11-aaf81db-head.md) | ✅ Clean | `v0.9.11-rc.3` | 2026-10-27 | [open](reports/v2.13/v2.13.11-aaf81db-head.md) |
-| v2.12 | [`v2.12.15-a0461d0-head`](reports/v2.12/v2.12.15-a0461d0-head.md) | ✅ Clean | `v0.8.12-rc.3` | 2026-10-27 | [open](reports/v2.12/v2.12.15-a0461d0-head.md) |
-| v2.11 | [`v2.11.19-dbb6003-head`](reports/v2.11/v2.11.19-dbb6003-head.md) | ✅ Clean | `v0.7.13-rc.2` | 2026-10-27 | [open](reports/v2.11/v2.11.19-dbb6003-head.md) |
+| v2.16 | [`v2.16.0-fc8de3b-head`](reports/v2.16/v2.16.0-fc8de3b-head.md) | ⚠️ 4 mismatches | `v0.12.1-rc.12` | 2026-10-28 | [open](reports/v2.16/v2.16.0-fc8de3b-head.md) |
+| v2.15 | [`v2.15.3-e2ba2d4-head`](reports/v2.15/v2.15.3-e2ba2d4-head.md) | ⚠️ 2 mismatches | `v0.11.4` | 2026-10-28 | [open](reports/v2.15/v2.15.3-e2ba2d4-head.md) |
+| v2.14 | [`v2.14.7-de0c71a-head`](reports/v2.14/v2.14.7-de0c71a-head.md) | ✅ Clean | `v0.10.13` | 2026-10-28 | [open](reports/v2.14/v2.14.7-de0c71a-head.md) |
+| v2.13 | [`v2.13.11-954e6af-head`](reports/v2.13/v2.13.11-954e6af-head.md) | ✅ Clean | `v0.9.11` | 2026-10-28 | [open](reports/v2.13/v2.13.11-954e6af-head.md) |
+| v2.12 | [`v2.12.15-acc4537-head`](reports/v2.12/v2.12.15-acc4537-head.md) | ✅ Clean | `v0.8.12` | 2026-10-28 | [open](reports/v2.12/v2.12.15-acc4537-head.md) |
+| v2.11 | [`v2.11.19-71ebb2d-head`](reports/v2.11/v2.11.19-71ebb2d-head.md) | ✅ Clean | `v0.7.13` | 2026-10-28 | [open](reports/v2.11/v2.11.19-71ebb2d-head.md) |
 
 ### Alphas
 
@@ -34,16 +34,16 @@ _Prime head labels use a seven-character SHA on this page; open a report for the
 
 ## Recent runs
 
+- 2026-10-28 · `prime-head` · [`v2.16.0-fc8de3b-head`](reports/v2.16/v2.16.0-fc8de3b-head.md) · ⚠️ 4 mismatches
+- 2026-10-28 · `prime-head` · [`v2.13.11-954e6af-head`](reports/v2.13/v2.13.11-954e6af-head.md) · ✅ Clean
+- 2026-10-28 · `prime-head` · [`v2.15.3-e2ba2d4-head`](reports/v2.15/v2.15.3-e2ba2d4-head.md) · ⚠️ 2 mismatches
+- 2026-10-28 · `prime-head` · [`v2.11.19-71ebb2d-head`](reports/v2.11/v2.11.19-71ebb2d-head.md) · ✅ Clean
+- 2026-10-28 · `prime-head` · [`v2.12.15-acc4537-head`](reports/v2.12/v2.12.15-acc4537-head.md) · ✅ Clean
+- 2026-10-28 · `prime-head` · [`v2.14.7-de0c71a-head`](reports/v2.14/v2.14.7-de0c71a-head.md) · ✅ Clean
 - 2026-10-27 · `prime-head` · [`v2.16.0-729b5db-head`](reports/v2.16/v2.16.0-729b5db-head.md) · ⚠️ 4 mismatches
 - 2026-10-27 · `prime-head` · [`v2.14.7-dea4684-head`](reports/v2.14/v2.14.7-dea4684-head.md) · ✅ Clean
 - 2026-10-27 · `prime-head` · [`v2.15.3-5eb027d-head`](reports/v2.15/v2.15.3-5eb027d-head.md) · ⚠️ 2 mismatches
 - 2026-10-27 · `prime-head` · [`v2.12.15-a0461d0-head`](reports/v2.12/v2.12.15-a0461d0-head.md) · ✅ Clean
-- 2026-10-27 · `prime-head` · [`v2.13.11-aaf81db-head`](reports/v2.13/v2.13.11-aaf81db-head.md) · ✅ Clean
-- 2026-10-27 · `prime-head` · [`v2.11.19-dbb6003-head`](reports/v2.11/v2.11.19-dbb6003-head.md) · ✅ Clean
-- 2026-10-27 · `prime-head` · [`v2.16.0-11b483d-head`](reports/v2.16/v2.16.0-11b483d-head.md) · ⚠️ 4 mismatches
-- 2026-10-27 · `prime-head` · [`v2.16.0-6d02b70-head`](reports/v2.16/v2.16.0-6d02b70-head.md) · ⚠️ 4 mismatches
-- 2026-10-27 · `prime-head` · [`v2.16.0-79f63a6-head`](reports/v2.16/v2.16.0-79f63a6-head.md) · ⚠️ 4 mismatches
-- 2026-10-27 · `prime-head` · [`v2.15.3-d95e99e-head`](reports/v2.15/v2.15.3-d95e99e-head.md) · ⚠️ 6 mismatches
 
 
 <!-- AUTO:DASHBOARD:END -->
