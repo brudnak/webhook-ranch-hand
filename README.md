@@ -14,7 +14,7 @@ _Prime head labels use a seven-character SHA on this page; open a report for the
 
 | Line | Latest build | Status | Webhook | Checked | Report |
 | --- | --- | --- | --- | --- | --- |
-| v2.16 | [`v2.16.0-5ae71d2-head`](reports/v2.16/v2.16.0-5ae71d2-head.md) | ⚠️ 2 mismatches | `v0.12.1-rc.14` | 2026-10-30 | [open](reports/v2.16/v2.16.0-5ae71d2-head.md) |
+| v2.16 | [`v2.16.0-e9d23b0-head`](reports/v2.16/v2.16.0-e9d23b0-head.md) | ⚠️ 2 mismatches | `v0.12.1-rc.14` | 2026-11-02 | [open](reports/v2.16/v2.16.0-e9d23b0-head.md) |
 | v2.15 | [`v2.15.4-4e60347-head`](reports/v2.15/v2.15.4-4e60347-head.md) | ⚠️ 2 mismatches | `v0.11.4` | 2026-10-30 | [open](reports/v2.15/v2.15.4-4e60347-head.md) |
 | v2.14 | [`v2.14.8-0cbef5e-head`](reports/v2.14/v2.14.8-0cbef5e-head.md) | ✅ Clean | `v0.10.13` | 2026-10-30 | [open](reports/v2.14/v2.14.8-0cbef5e-head.md) |
 | v2.13 | [`v2.13.12-3b50504-head`](reports/v2.13/v2.13.12-3b50504-head.md) | ✅ Clean | `v0.9.11` | 2026-10-30 | [open](reports/v2.13/v2.13.12-3b50504-head.md) |
@@ -34,6 +34,7 @@ _Prime head labels use a seven-character SHA on this page; open a report for the
 
 ## Recent runs
 
+- 2026-11-02 · `prime-head` · [`v2.16.0-e9d23b0-head`](reports/v2.16/v2.16.0-e9d23b0-head.md) · ⚠️ 2 mismatches
 - 2026-10-30 · `prime-head` · [`v2.16.0-5ae71d2-head`](reports/v2.16/v2.16.0-5ae71d2-head.md) · ⚠️ 2 mismatches
 - 2026-10-30 · `prime-head` · [`v2.15.4-4e60347-head`](reports/v2.15/v2.15.4-4e60347-head.md) · ⚠️ 2 mismatches
 - 2026-10-30 · `prime-head` · [`v2.14.8-0cbef5e-head`](reports/v2.14/v2.14.8-0cbef5e-head.md) · ✅ Clean
@@ -43,7 +44,6 @@ _Prime head labels use a seven-character SHA on this page; open a report for the
 - 2026-10-30 · `prime-head` · [`v2.16.0-57688a2-head`](reports/v2.16/v2.16.0-57688a2-head.md) · ⚠️ 2 mismatches
 - 2026-10-30 · `prime-head` · [`v2.14.7-ffd45a4-head`](reports/v2.14/v2.14.7-ffd45a4-head.md) · ✅ Clean
 - 2026-10-30 · `prime-head` · [`v2.12.15-3128c7a-head`](reports/v2.12/v2.12.15-3128c7a-head.md) · ✅ Clean
-- 2026-10-30 · `prime-head` · [`v2.13.11-1e64ce0-head`](reports/v2.13/v2.13.11-1e64ce0-head.md) · ✅ Clean
 
 
 <!-- AUTO:DASHBOARD:END -->
