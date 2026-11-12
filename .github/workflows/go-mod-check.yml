@@ -16,12 +16,12 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       DISCOVERY_MAX_AGE_DAYS: "30"
       DISCOVERY_TAGS_PER_LINE: "10"
-      RANCHER_PRIME_IMAGE_SOURCE: stgregistry.suse.com/rancher/rancher
-      RANCHER_IMAGE_SOURCES: >-
-        stgregistry.suse.com/rancher/rancher
-        docker.io/rancher/rancher
-        registry.rancher.com/rancher/rancher
-        registry.suse.com/rancher/rancher
+      RANCHER_PRIME_REGISTRY: stgregistry.suse.com
+      RANCHER_REGISTRIES: >-
+        stgregistry.suse.com
+        docker.io
+        registry.rancher.com
+        registry.suse.com
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -52,8 +52,8 @@ jobs:
             -tags-per-line "$DISCOVERY_TAGS_PER_LINE"
             -streams alpha
           )
-          for image in $RANCHER_IMAGE_SOURCES; do
-            alpha_args+=(-image "$image")
+          for registry in $RANCHER_REGISTRIES; do
+            alpha_args+=(-image "$registry/rancher/rancher" -image "$registry/rancher/rancher-server")
           done
 
           # Prime per-commit heads are staging-only. Run this stream separately
@@ -62,11 +62,12 @@ jobs:
             -max-age-days "$DISCOVERY_MAX_AGE_DAYS"
             -tags-per-line "$DISCOVERY_TAGS_PER_LINE"
             -streams prime-head
-            -image "$RANCHER_PRIME_IMAGE_SOURCE"
           )
 
           "$COMPARE_BIN" discover "${alpha_args[@]}" > /tmp/alpha-candidates.tsv
-          "$COMPARE_BIN" discover "${prime_args[@]}" > /tmp/prime-head-candidates.tsv
+          for repo in rancher/rancher rancher/rancher-server; do
+            "$COMPARE_BIN" discover "${prime_args[@]}" -image "$RANCHER_PRIME_REGISTRY/$repo"
+          done > /tmp/prime-head-candidates.tsv
           cat /tmp/alpha-candidates.tsv /tmp/prime-head-candidates.tsv > /tmp/candidates.tsv
 
           # Output columns:
@@ -125,17 +126,23 @@ jobs:
 
           inspect_rancher_image() {
             local tag="$1"
-            local image
-            local image_sources="$RANCHER_IMAGE_SOURCES"
+            local registry image
+            local registries="$RANCHER_REGISTRIES"
+            local repo=rancher/rancher
+            [[ "$tag" =~ ^v([0-9]+)\.([0-9]+)[.-] ]] || return 1
+            if (( 10#${BASH_REMATCH[1]} > 2 || (10#${BASH_REMATCH[1]} == 2 && 10#${BASH_REMATCH[2]} >= 16) )); then
+              repo=rancher/rancher-server
+            fi
 
             # Patch-qualified SHA heads are Prime-only and must never silently
             # fall back to a similarly named Community image. New builds use a
             # seven-character SHA; legacy builds retain the full 40 characters.
             if [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-([0-9a-fA-F]{7}|[0-9a-fA-F]{40})-head$ ]]; then
-              image_sources="$RANCHER_PRIME_IMAGE_SOURCE"
+              registries="$RANCHER_PRIME_REGISTRY"
             fi
 
-            for image in $image_sources; do
+            for registry in $registries; do
+              image="$registry/$repo"
               if config_json=$(skopeo inspect --override-os linux --override-arch amd64 --config "docker://${image}:${tag}" 2>/dev/null); then
                 jq -r --arg source "$image" --arg tag "$tag" '
                   (.config.Labels // {}) as $labels

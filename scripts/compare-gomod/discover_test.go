@@ -649,3 +649,35 @@ func discoverContains(values []string, want string) bool {
 	}
 	return false
 }
+
+func TestDiscoverProductionImageCutover(t *testing.T) {
+	const legacy = "stgregistry.suse.com/rancher/rancher"
+	const server = legacy + "-server"
+	now := time.Now().UTC()
+	wanted := map[string]string{
+		"v2.15.9-alpha1":       legacy,
+		"v2.16.0-c4246d8-head": server,
+		"v3.0.0-alpha1":        server,
+	}
+	runner := newDiscoverFixtureRunner()
+	for _, image := range []string{legacy, server} {
+		tags := []string{"v2.16-head"}
+		for tag := range wanted {
+			tags = append(tags, tag)
+			runner.configs[discoverFixtureKey(image, tag)] = discoverFixtureResponse{data: discoverConfigFixture(
+				now, "wrapper", "c4246d8"+strings.Repeat("a", 33), "RANCHER_VERSION_TYPE=prime",
+			)}
+		}
+		runner.listings[image] = discoverFixtureResponse{data: discoverTagsFixture(tags...)}
+	}
+
+	got, err := discoverCandidates(context.Background(), runner, discoverOptions{Now: now}, &bytes.Buffer{})
+	if err != nil || len(got) != len(wanted) {
+		t.Fatalf("got %v, err %v", got, err)
+	}
+	for _, candidate := range got {
+		if expected := wanted[candidate.Tag]; candidate.ImageSource != expected {
+			t.Errorf("%s: got %s, want %s", candidate.Tag, candidate.ImageSource, expected)
+		}
+	}
+}

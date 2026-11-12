@@ -32,9 +32,13 @@ const (
 
 var discoverDefaultImages = []string{
 	"stgregistry.suse.com/rancher/rancher",
+	"stgregistry.suse.com/rancher/rancher-server",
 	"docker.io/rancher/rancher",
+	"docker.io/rancher/rancher-server",
 	"registry.rancher.com/rancher/rancher",
+	"registry.rancher.com/rancher/rancher-server",
 	"registry.suse.com/rancher/rancher",
+	"registry.suse.com/rancher/rancher-server",
 }
 
 var (
@@ -160,6 +164,19 @@ func (t discoverTag) lineKey() string {
 	return strconv.Itoa(t.major) + "." + strconv.Itoa(t.minor)
 }
 
+// Rancher 2.16 split the production server from the Docker demo image.
+func (t discoverTag) matchesImage(image string) bool {
+	server := t.major > 2 || (t.major == 2 && t.minor >= 16)
+	switch {
+	case image == "rancher/rancher-server" || strings.HasSuffix(image, "/rancher/rancher-server"):
+		return server
+	case image == "rancher/rancher" || strings.HasSuffix(image, "/rancher/rancher"):
+		return !server
+	default:
+		return true // Custom repository supplied with -image.
+	}
+}
+
 func parseDiscoverTag(tag string) (discoverTag, bool) {
 	if match := discoverAlphaTagRE.FindStringSubmatch(tag); match != nil {
 		values, ok := discoverNumericTagParts(match[1], match[2], match[3], match[4])
@@ -238,7 +255,7 @@ func discoverCandidates(ctx context.Context, runner skopeoRunner, opts discoverO
 			}
 			seenAtSource[name] = true
 			tag, ok := parseDiscoverTag(name)
-			if !ok || !opts.Streams[tag.stream] {
+			if !ok || !opts.Streams[tag.stream] || !tag.matchesImage(image) {
 				continue
 			}
 			target := targetByName[name]
