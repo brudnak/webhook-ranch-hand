@@ -14,8 +14,8 @@ _Prime head labels use a seven-character SHA on this page; open a report for the
 
 | Line | Latest build | Status | Webhook | Checked | Report |
 | --- | --- | --- | --- | --- | --- |
-| v2.17 | [`v2.17.0-5663011-head`](reports/v2.17/v2.17.0-5663011-head.md) | ⚠️ 6 mismatches | `v0.12.1-rc.17` | 2026-11-13 | [open](reports/v2.17/v2.17.0-5663011-head.md) |
-| v2.16 | [`v2.16.0-e68b395-head`](reports/v2.16/v2.16.0-e68b395-head.md) | ⚠️ 6 mismatches | `v0.12.1-rc.17` | 2026-11-13 | [open](reports/v2.16/v2.16.0-e68b395-head.md) |
+| v2.17 | [`v2.17.0-63f5302-head`](reports/v2.17/v2.17.0-63f5302-head.md) | ⚠️ 6 mismatches | `v0.12.1-rc.17` | 2026-11-14 | [open](reports/v2.17/v2.17.0-63f5302-head.md) |
+| v2.16 | [`v2.16.0-70005cd-head`](reports/v2.16/v2.16.0-70005cd-head.md) | ⚠️ 6 mismatches | `v0.12.1-rc.17` | 2026-11-14 | [open](reports/v2.16/v2.16.0-70005cd-head.md) |
 | v2.15 | [`v2.15.4-76ef45e-head`](reports/v2.15/v2.15.4-76ef45e-head.md) | ⚠️ 7 mismatches | `v0.11.5-rc.1` | 2026-11-13 | [open](reports/v2.15/v2.15.4-76ef45e-head.md) |
 | v2.14 | [`v2.14.8-8f54d6a-head`](reports/v2.14/v2.14.8-8f54d6a-head.md) | ⚠️ 5 mismatches | `v0.10.14-rc.1` | 2026-11-13 | [open](reports/v2.14/v2.14.8-8f54d6a-head.md) |
 | v2.13 | [`v2.13.12-617da5f-head`](reports/v2.13/v2.13.12-617da5f-head.md) | ⚠️ 5 mismatches | `v0.9.12-rc.1` | 2026-11-13 | [open](reports/v2.13/v2.13.12-617da5f-head.md) |
@@ -35,6 +35,8 @@ _Prime head labels use a seven-character SHA on this page; open a report for the
 
 ## Recent runs
 
+- 2026-11-13 · `prime-head` · [`v2.16.0-70005cd-head`](reports/v2.16/v2.16.0-70005cd-head.md) · ⚠️ 6 mismatches
+- 2026-11-13 · `prime-head` · [`v2.17.0-63f5302-head`](reports/v2.17/v2.17.0-63f5302-head.md) · ⚠️ 6 mismatches
 - 2026-11-13 · `prime-head` · [`v2.13.12-617da5f-head`](reports/v2.13/v2.13.12-617da5f-head.md) · ⚠️ 5 mismatches
 - 2026-11-13 · `prime-head` · [`v2.16.0-e68b395-head`](reports/v2.16/v2.16.0-e68b395-head.md) · ⚠️ 6 mismatches
 - 2026-11-13 · `prime-head` · [`v2.14.8-8f54d6a-head`](reports/v2.14/v2.14.8-8f54d6a-head.md) · ⚠️ 5 mismatches
@@ -43,8 +45,6 @@ _Prime head labels use a seven-character SHA on this page; open a report for the
 - 2026-11-13 · `prime-head` · [`v2.12.16-b38f310-head`](reports/v2.12/v2.12.16-b38f310-head.md) · ⚠️ 4 mismatches
 - 2026-11-13 · `prime-head` · [`v2.16.0-28de766-head`](reports/v2.16/v2.16.0-28de766-head.md) · ⚠️ 6 mismatches
 - 2026-11-13 · `prime-head` · [`v2.15.4-8ea2b47-head`](reports/v2.15/v2.15.4-8ea2b47-head.md) · ⚠️ 7 mismatches
-- 2026-11-13 · `prime-head` · [`v2.14.8-cb2dc50-head`](reports/v2.14/v2.14.8-cb2dc50-head.md) · ⚠️ 5 mismatches
-- 2026-11-13 · `prime-head` · [`v2.12.16-177bb80-head`](reports/v2.12/v2.12.16-177bb80-head.md) · ⚠️ 3 mismatches
 
 
 <!-- AUTO:DASHBOARD:END -->
