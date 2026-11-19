@@ -15,11 +15,11 @@ _Prime head labels use a seven-character SHA on this page; open a report for the
 | Line | Latest build | Status | Webhook | Checked | Report |
 | --- | --- | --- | --- | --- | --- |
 | v2.17 | [`v2.17.0-534222a-head`](reports/v2.17/v2.17.0-534222a-head.md) | ⚠️ 6 mismatches | `v0.12.1-rc.17` | 2026-11-18 | [open](reports/v2.17/v2.17.0-534222a-head.md) |
-| v2.16 | [`v2.16.0-7c5dd69-head`](reports/v2.16/v2.16.0-7c5dd69-head.md) | ⚠️ 6 mismatches | `v0.12.1-rc.17` | 2026-11-18 | [open](reports/v2.16/v2.16.0-7c5dd69-head.md) |
-| v2.15 | [`v2.15.4-a0ebc0e-head`](reports/v2.15/v2.15.4-a0ebc0e-head.md) | ⚠️ 7 mismatches | `v0.11.5-rc.1` | 2026-11-17 | [open](reports/v2.15/v2.15.4-a0ebc0e-head.md) |
-| v2.14 | [`v2.14.8-f80792f-head`](reports/v2.14/v2.14.8-f80792f-head.md) | ⚠️ 5 mismatches | `v0.10.14-rc.1` | 2026-11-17 | [open](reports/v2.14/v2.14.8-f80792f-head.md) |
-| v2.13 | [`v2.13.12-a640979-head`](reports/v2.13/v2.13.12-a640979-head.md) | ⚠️ 5 mismatches | `v0.9.12-rc.1` | 2026-11-17 | [open](reports/v2.13/v2.13.12-a640979-head.md) |
-| v2.12 | [`v2.12.16-b50e4c9-head`](reports/v2.12/v2.12.16-b50e4c9-head.md) | ⚠️ 4 mismatches | `v0.8.13-rc.1` | 2026-11-18 | [open](reports/v2.12/v2.12.16-b50e4c9-head.md) |
+| v2.16 | [`v2.16.0-845fc45-head`](reports/v2.16/v2.16.0-845fc45-head.md) | ⚠️ 2 mismatches | `v0.12.1-rc.20` | 2026-11-19 | [open](reports/v2.16/v2.16.0-845fc45-head.md) |
+| v2.15 | [`v2.15.4-0a802dd-head`](reports/v2.15/v2.15.4-0a802dd-head.md) | ⚠️ 2 mismatches | `v0.11.5-rc.3` | 2026-11-19 | [open](reports/v2.15/v2.15.4-0a802dd-head.md) |
+| v2.14 | [`v2.14.8-6c8c95c-head`](reports/v2.14/v2.14.8-6c8c95c-head.md) | ✅ Clean | `v0.10.14-rc.3` | 2026-11-19 | [open](reports/v2.14/v2.14.8-6c8c95c-head.md) |
+| v2.13 | [`v2.13.12-39d4792-head`](reports/v2.13/v2.13.12-39d4792-head.md) | ✅ Clean | `v0.9.12-rc.3` | 2026-11-19 | [open](reports/v2.13/v2.13.12-39d4792-head.md) |
+| v2.12 | [`v2.12.16-285f920-head`](reports/v2.12/v2.12.16-285f920-head.md) | ✅ Clean | `v0.8.13-rc.3` | 2026-11-19 | [open](reports/v2.12/v2.12.16-285f920-head.md) |
 | v2.11 | [`v2.11.19-e6836a0-head`](reports/v2.11/v2.11.19-e6836a0-head.md) | ✅ Clean | `v0.7.13` | 2026-10-30 | [open](reports/v2.11/v2.11.19-e6836a0-head.md) |
 
 ### Alphas
@@ -35,16 +35,16 @@ _Prime head labels use a seven-character SHA on this page; open a report for the
 
 ## Recent runs
 
+- 2026-11-18 · `prime-head` · [`v2.16.0-845fc45-head`](reports/v2.16/v2.16.0-845fc45-head.md) · ⚠️ 2 mismatches
+- 2026-11-18 · `prime-head` · [`v2.13.12-39d4792-head`](reports/v2.13/v2.13.12-39d4792-head.md) · ✅ Clean
+- 2026-11-18 · `prime-head` · [`v2.15.4-0a802dd-head`](reports/v2.15/v2.15.4-0a802dd-head.md) · ⚠️ 2 mismatches
+- 2026-11-18 · `prime-head` · [`v2.12.16-285f920-head`](reports/v2.12/v2.12.16-285f920-head.md) · ✅ Clean
+- 2026-11-18 · `prime-head` · [`v2.14.8-6c8c95c-head`](reports/v2.14/v2.14.8-6c8c95c-head.md) · ✅ Clean
 - 2026-11-18 · `prime-head` · [`v2.16.0-7c5dd69-head`](reports/v2.16/v2.16.0-7c5dd69-head.md) · ⚠️ 6 mismatches
 - 2026-11-18 · `prime-head` · [`v2.17.0-534222a-head`](reports/v2.17/v2.17.0-534222a-head.md) · ⚠️ 6 mismatches
 - 2026-11-18 · `prime-head` · [`v2.16.0-d2f4d8e-head`](reports/v2.16/v2.16.0-d2f4d8e-head.md) · ⚠️ 6 mismatches
 - 2026-11-18 · `prime-head` · [`v2.17.0-a540000-head`](reports/v2.17/v2.17.0-a540000-head.md) · ⚠️ 6 mismatches
 - 2026-11-18 · `prime-head` · [`v2.17.0-ddb52da-head`](reports/v2.17/v2.17.0-ddb52da-head.md) · ⚠️ 6 mismatches
-- 2026-11-18 · `prime-head` · [`v2.12.16-b50e4c9-head`](reports/v2.12/v2.12.16-b50e4c9-head.md) · ⚠️ 4 mismatches
-- 2026-11-17 · `prime-head` · [`v2.16.0-04d821c-head`](reports/v2.16/v2.16.0-04d821c-head.md) · ⚠️ 6 mismatches
-- 2026-11-17 · `prime-head` · [`v2.14.8-f80792f-head`](reports/v2.14/v2.14.8-f80792f-head.md) · ⚠️ 5 mismatches
-- 2026-11-17 · `prime-head` · [`v2.16.0-23c6e7c-head`](reports/v2.16/v2.16.0-23c6e7c-head.md) · ⚠️ 6 mismatches
-- 2026-11-17 · `prime-head` · [`v2.13.12-a640979-head`](reports/v2.13/v2.13.12-a640979-head.md) · ⚠️ 5 mismatches
 
 
 <!-- AUTO:DASHBOARD:END -->
