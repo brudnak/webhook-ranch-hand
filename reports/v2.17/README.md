@@ -2,10 +2,11 @@
 
 # v2.17 reports
 
-12 report(s) for release line v2.17.
+13 report(s) for release line v2.17.
 
 | Build | Stream | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `v2.17.0-7b18df2-head` | `prime-head` | 2026-11-19 | Image built | ⚠️ 6 mismatches | `v0.12.1-rc.17` | 2026-11-06 | 2026-11-20 | [open](v2.17.0-7b18df2-head.md) |
 | `v2.17.0-7ec6985-head` | `prime-head` | 2026-11-19 | Image built | ⚠️ 6 mismatches | `v0.12.1-rc.17` | 2026-11-06 | 2026-11-19 | [open](v2.17.0-7ec6985-head.md) |
 | `v2.17.0-f0387f2-head` | `prime-head` | 2026-11-19 | Image built | ⚠️ 6 mismatches | `v0.12.1-rc.17` | 2026-11-06 | 2026-11-19 | [open](v2.17.0-f0387f2-head.md) |
 | `v2.17.0-534222a-head` | `prime-head` | 2026-11-18 | Image built | ⚠️ 6 mismatches | `v0.12.1-rc.17` | 2026-11-06 | 2026-11-18 | [open](v2.17.0-534222a-head.md) |
