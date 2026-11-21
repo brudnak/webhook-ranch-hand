@@ -14,12 +14,12 @@ _Prime head labels use a seven-character SHA on this page; open a report for the
 
 | Line | Latest build | Status | Webhook | Checked | Report |
 | --- | --- | --- | --- | --- | --- |
-| v2.17 | [`v2.17.0-c70df8a-head`](reports/v2.17/v2.17.0-c70df8a-head.md) | ⚠️ 4 mismatches | `v0.12.1-rc.21` | 2026-11-20 | [open](reports/v2.17/v2.17.0-c70df8a-head.md) |
-| v2.16 | [`v2.16.0-6800cab-head`](reports/v2.16/v2.16.0-6800cab-head.md) | ⚠️ 3 mismatches | `v0.12.1-rc.21` | 2026-11-20 | [open](reports/v2.16/v2.16.0-6800cab-head.md) |
-| v2.15 | [`v2.15.4-e1f36c4-head`](reports/v2.15/v2.15.4-e1f36c4-head.md) | ⚠️ 3 mismatches | `v0.11.5-rc.3` | 2026-11-20 | [open](reports/v2.15/v2.15.4-e1f36c4-head.md) |
-| v2.14 | [`v2.14.8-bc93c4f-head`](reports/v2.14/v2.14.8-bc93c4f-head.md) | ⚠️ 1 mismatch | `v0.10.14-rc.3` | 2026-11-20 | [open](reports/v2.14/v2.14.8-bc93c4f-head.md) |
-| v2.13 | [`v2.13.12-3790209-head`](reports/v2.13/v2.13.12-3790209-head.md) | ⚠️ 1 mismatch | `v0.9.12-rc.3` | 2026-11-20 | [open](reports/v2.13/v2.13.12-3790209-head.md) |
-| v2.12 | [`v2.12.16-22318bc-head`](reports/v2.12/v2.12.16-22318bc-head.md) | ⚠️ 1 mismatch | `v0.8.13-rc.3` | 2026-11-20 | [open](reports/v2.12/v2.12.16-22318bc-head.md) |
+| v2.17 | [`v2.17.0-531c5f6-head`](reports/v2.17/v2.17.0-531c5f6-head.md) | ⚠️ 4 mismatches | `v0.12.1-rc.21` | 2026-11-21 | [open](reports/v2.17/v2.17.0-531c5f6-head.md) |
+| v2.16 | [`v2.16.0-fe2576e-head`](reports/v2.16/v2.16.0-fe2576e-head.md) | ⚠️ 3 mismatches | `v0.12.1-rc.21` | 2026-11-21 | [open](reports/v2.16/v2.16.0-fe2576e-head.md) |
+| v2.15 | [`v2.15.4-d8bdd79-head`](reports/v2.15/v2.15.4-d8bdd79-head.md) | ⚠️ 3 mismatches | `v0.11.5-rc.3` | 2026-11-21 | [open](reports/v2.15/v2.15.4-d8bdd79-head.md) |
+| v2.14 | [`v2.14.8-87c0789-head`](reports/v2.14/v2.14.8-87c0789-head.md) | ⚠️ 1 mismatch | `v0.10.14-rc.3` | 2026-11-21 | [open](reports/v2.14/v2.14.8-87c0789-head.md) |
+| v2.13 | [`v2.13.12-288a387-head`](reports/v2.13/v2.13.12-288a387-head.md) | ⚠️ 1 mismatch | `v0.9.12-rc.3` | 2026-11-21 | [open](reports/v2.13/v2.13.12-288a387-head.md) |
+| v2.12 | [`v2.12.16-06e7eb3-head`](reports/v2.12/v2.12.16-06e7eb3-head.md) | ⚠️ 1 mismatch | `v0.8.13-rc.3` | 2026-11-21 | [open](reports/v2.12/v2.12.16-06e7eb3-head.md) |
 | v2.11 | [`v2.11.19-e6836a0-head`](reports/v2.11/v2.11.19-e6836a0-head.md) | ✅ Clean | `v0.7.13` | 2026-10-30 | [open](reports/v2.11/v2.11.19-e6836a0-head.md) |
 
 ### Alphas
@@ -35,16 +35,16 @@ _Prime head labels use a seven-character SHA on this page; open a report for the
 
 ## Recent runs
 
+- 2026-11-20 · `prime-head` · [`v2.17.0-531c5f6-head`](reports/v2.17/v2.17.0-531c5f6-head.md) · ⚠️ 4 mismatches
+- 2026-11-20 · `prime-head` · [`v2.15.4-d8bdd79-head`](reports/v2.15/v2.15.4-d8bdd79-head.md) · ⚠️ 3 mismatches
+- 2026-11-20 · `prime-head` · [`v2.12.16-06e7eb3-head`](reports/v2.12/v2.12.16-06e7eb3-head.md) · ⚠️ 1 mismatch
+- 2026-11-20 · `prime-head` · [`v2.13.12-288a387-head`](reports/v2.13/v2.13.12-288a387-head.md) · ⚠️ 1 mismatch
+- 2026-11-20 · `prime-head` · [`v2.14.8-87c0789-head`](reports/v2.14/v2.14.8-87c0789-head.md) · ⚠️ 1 mismatch
+- 2026-11-20 · `prime-head` · [`v2.16.0-fe2576e-head`](reports/v2.16/v2.16.0-fe2576e-head.md) · ⚠️ 3 mismatches
 - 2026-11-20 · `prime-head` · [`v2.17.0-c70df8a-head`](reports/v2.17/v2.17.0-c70df8a-head.md) · ⚠️ 4 mismatches
 - 2026-11-20 · `prime-head` · [`v2.13.12-3790209-head`](reports/v2.13/v2.13.12-3790209-head.md) · ⚠️ 1 mismatch
 - 2026-11-20 · `prime-head` · [`v2.15.4-e1f36c4-head`](reports/v2.15/v2.15.4-e1f36c4-head.md) · ⚠️ 3 mismatches
 - 2026-11-20 · `prime-head` · [`v2.16.0-6800cab-head`](reports/v2.16/v2.16.0-6800cab-head.md) · ⚠️ 3 mismatches
-- 2026-11-20 · `prime-head` · [`v2.12.16-22318bc-head`](reports/v2.12/v2.12.16-22318bc-head.md) · ⚠️ 1 mismatch
-- 2026-11-20 · `prime-head` · [`v2.14.8-bc93c4f-head`](reports/v2.14/v2.14.8-bc93c4f-head.md) · ⚠️ 1 mismatch
-- 2026-11-20 · `prime-head` · [`v2.17.0-e450aea-head`](reports/v2.17/v2.17.0-e450aea-head.md) · ⚠️ 4 mismatches
-- 2026-11-20 · `prime-head` · [`v2.16.0-838d450-head`](reports/v2.16/v2.16.0-838d450-head.md) · ⚠️ 2 mismatches
-- 2026-11-20 · `prime-head` · [`v2.15.4-805c62a-head`](reports/v2.15/v2.15.4-805c62a-head.md) · ⚠️ 2 mismatches
-- 2026-11-20 · `prime-head` · [`v2.12.16-4d4ccc9-head`](reports/v2.12/v2.12.16-4d4ccc9-head.md) · ✅ Clean
 
 
 <!-- AUTO:DASHBOARD:END -->
