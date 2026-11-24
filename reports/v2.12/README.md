@@ -2,10 +2,11 @@
 
 # v2.12 reports
 
-79 report(s) for release line v2.12.
+80 report(s) for release line v2.12.
 
 | Build | Stream | Rancher date | Source | Status | Webhook | Webhook date | Checked | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `v2.12.16-4db3283-head` | `prime-head` | 2026-11-24 | Image built | ⚠️ 1 mismatch | `v0.8.13-rc.3` | 2026-11-18 | 2026-11-24 | [open](v2.12.16-4db3283-head.md) |
 | `v2.12.16-06e7eb3-head` | `prime-head` | 2026-11-20 | Image built | ⚠️ 1 mismatch | `v0.8.13-rc.3` | 2026-11-18 | 2026-11-21 | [open](v2.12.16-06e7eb3-head.md) |
 | `v2.12.16-22318bc-head` | `prime-head` | 2026-11-20 | Image built | ⚠️ 1 mismatch | `v0.8.13-rc.3` | 2026-11-18 | 2026-11-20 | [open](v2.12.16-22318bc-head.md) |
 | `v2.12.16-4d4ccc9-head` | `prime-head` | 2026-11-20 | Image built | ✅ Clean | `v0.8.13-rc.3` | 2026-11-18 | 2026-11-20 | [open](v2.12.16-4d4ccc9-head.md) |
